@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Регистрация</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-app="REGISTRATION_FORM" ng-controller="REGISTRATION_FORM_CTRL">
+    <div class="container text-center">
+        <p></p>
+        <h4>Введите данные, необходимые для регистрации</h4>
+        <p></p>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <span class="input-group-text">Логин</span>
+                <input type="text" ng-model="userDto.username" class="form-control" value="" required>
+                <p></p>
+
+                <span class="input-group-text">Пароль</span>
+                <input type="password" ng-model="userDto.password" class="form-control" value="" required>
+
+                <span class="input-group-text">Подтверждение пароля</span>
+                <input type="password" ng-model="userDto.passwordConfirm" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Фамилия</span>
+                <input type="text" ng-model="userDto.surname" class="form-control" value="" required>
+
+                <span class="input-group-text">Имя</span>
+                <input type="text" ng-model="userDto.name" class="form-control" value="" required>
+
+                <span class="input-group-text">Отчество</span>
+                <input type="text" ng-model="userDto.patronymic" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Рабочий номер телефона</span>
+                <input type="text" ng-model="userDto.phoneNumber" class="form-control" value="" required>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-2">
+                    <p></p>
+                    <button class="btn btn-primary" ng-click="register()" type="button">Зарегистрироваться</button>
+                </div>
+
+                <div class="col-md-2">
+                    <p></p>
+                    <a role="button" class="btn btn-outline-primary me-2" type="button" href="/login">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("REGISTRATION_FORM", []);
+        app.controller("REGISTRATION_FORM_CTRL", function ($scope, $http) {
+
+            // сохранение в БД;
+            $scope.register = function () {
+                if ($scope.userDto.password == $scope.userDto.passwordConfirm) {
+                    $http({
+                        url: "/users/registration",
+                        method: "POST",
+                        data: $scope.userDto
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                        window.location.href = "/login";
+                    }, function errorCallback(response) {
+                        alert(response.data.message)
+                    });
+                } else {
+                    alert("Введенные пароли не совпадают");    
+                }
+            }
+
+    
+
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Система метрологического обеспечения</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body data-bs-theme="light" ng-app="MAIN" ng-controller="MAIN_CTRL">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-md-7">
+      <nav class="navbar navbar-expand  rounded">
+        <div class="container-fluid justify-content-start">
+          <div class="nav">
+            <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+        </div>       
+          </div>
+      </nav>
+      </div>
+  
+      <div class="col-md-3">
+      <nav class="navbar bg-body-tertiary">
+        <form class="container-fluid justify-content-end">
+         <label class="d-flex p-2"  ng-model="currentUser">{{currentUser.surname}} {{currentUser.name}}</label>
+         <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+       </form>
+     </nav>
+    </div>
+  </div>
+
+  
+    <div class="row text-primary-emphasis">
+      <div class="text-primary-emphasis">
+        <h4>Администрирование системы</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 text-start">
+        <div class="btn-group-vertical" role="group" aria-label="vertical_menu">
+          <a class="btn btn-primary btn-lg" href="/user/wait" role="button">Проверка регистрации<span class="badge text-bg-secondary" ng-model="waitCount">{{waitCount}}</span></a>
+          <a class="btn btn-primary btn-lg" href="/user" role="button">Список пользователей</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="pleaseWaitMessage" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto text-primary">Поиск информации в ФГИС "Аршин"</strong>
+        </div>
+        <div class="toast-body">
+          Пожалуйста ожидайте
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript">
+    var app = angular.module("MAIN", []);
+    app.controller("MAIN_CTRL", function ($scope, $http) {
+
+      $scope.updateReportsFromArshin = function () {
+        showMessage("pleaseWaitMessage");
+        $http({
+          url: "/reports/verifications/update/all",
+          method: "GET"
+        }).then(function (response) {
+          alert(response.data.message);
+          hideMessage("pleaseWaitMessage");
+        });
+
+      }
+
+      
+      function getWaitCheckUsersCount() {
+        $http({
+          url: "/users/wait/count",
+          method: "GET"
+        }).then(function (response) {
+          $scope.waitCount = response.data;
+        });
+      }
+
+      function showMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.show();
+      }
+
+      function hideMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.hide();
+      }
+
+      function getCurrentUser() {
+        $http({
+          url: "/users/username",
+          method: "GET"
+        }).then(function (response) {
+          $scope.currentUser = response.data;
+        });
+      }
+      getCurrentUser();
+      getWaitCheckUsersCount();
+
+    });
+  </script>
+</body>
+
+</html>

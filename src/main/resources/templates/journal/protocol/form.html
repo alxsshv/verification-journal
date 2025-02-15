@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавление протокола поверки</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-app="VERIFICATION_PROTOCOL_FORM" ng-controller="VERIFICATION_PROTOCOL_FORM_CTRL">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <nav class="navbar navbar-expand  rounded">
+                    <div class="container-fluid justify-content-start">
+                        <div class="nav">
+                            <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="/journal/">Журналы поверки</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="{{reference}}">К текущему журналу</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-md-3">
+                <nav class="navbar bg-body-tertiary">
+                    <form class="container-fluid justify-content-end">
+                        <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}}
+                            {{currentUser.name}}</label>
+                        <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+                    </form>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <h5>Добавление протокола поверки</h5>
+        </div>
+        <div class="row-center">Сведения о протоколе</div>
+        <div class="p-3 bg-primary bg-opacity-10 border border-primary rounded-3">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label for="inputMiType" class="form-label">№ проткола</label>
+                    <input type="text" ng-model="protocolInfo.number" placeholder="XXX" class="form-control border-primary"
+                        id="inputMiType" value="" required>
+                </div>
+                <div class="col-md-9">
+                    <label for="inputText2" class="form-label">Описание</label>
+                    <input type="text" ng-model="protocolInfo.description" placeholder="Пример: Протокол периодической поверки вольтметра"
+                        class="form-control border-primary" id="inputText2" value="" required>
+                </div>
+            </div>
+            <p></p>
+            <div class="row g-2">
+                <div class="col-md-9">
+                    <label for="inputText2" class="form-label">Средство измерений</label>
+                    <input type="text" ng-model="mi"
+                        class="form-control dropdown-toggle border-primary" id="inputText3" value="">
+                </div>
+                <div class="col-md-3">
+                    <label for="inputDate" class="form-label">Дата поверки</label>
+                    <input type="date" ng-model="protocolInfo.verificationDate" ng-model-options="{timezone: 'UTC'}" class="form-control border-primary"
+                        id="inputDate" value="" required>
+                </div>
+            </div>
+            <p></p>
+            <div class="row g-2">
+                <div class="col-md-12">
+                    <label for="inputText2" class="form-label">Поверитель</label>
+                    <input type="text" ng-change="searchEmployee()" ng-model="employeeSearchString" data-bs-toggle="dropdown"
+                        class="form-control dropdown-toggle border-primary" id="inputText4" value="">
+
+                    <ul class="dropdown-menu" ng-model="employee">
+                        <li ng-repeat="item in employees" value="{{item}}"> <a class="dropdown-item" ng-click="selectEmployee(item)"
+                                href="#">{{item.surname}} {{item.name}} {{item.patronymic}}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+ 
+        <p></p>
+        <div class="col-md-12">
+            <div class="bg-primary bg-opacity-10 border border-primary overflow-y-scroll rounded-3 ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input class="inline-block" ng-change ="buildFileNameList()"  type="file" file-model="change.fnEvidence" name="file"
+                            ng-model="file" data-rule-required="true" id="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.svg,.pdf,.odf,.ods,.docx,.doc,.odt">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+
+        <div class="col-12">
+            <button class="btn btn-primary" ng-click="addProtocol()" type="button">Добавить</button>
+        </div>
+        </p>
+    </div>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("VERIFICATION_PROTOCOL_FORM", []);
+        var idAttr = new URL(document.URL).searchParams.get("id");
+        app.controller("VERIFICATION_PROTOCOL_FORM_CTRL", function ($scope, $http) {
+            $scope.reference = "/journal/" + idAttr + "?id=" + idAttr
+            $scope.protocolInfo = {};
+        
+
+                $scope.employees = [];
+                $scope.searchEmployee = function () {
+                    if ($scope.employeeSearchString.length > 2) {
+                        $http({
+                            url: "/users/search?search=" + $scope.employeeSearchString,
+                            method: "GET"
+                        }).then(function (response) {
+                            $scope.employees = response.data;
+                            console.log($scope.employees);
+                        });
+                    }
+                }
+
+                $scope.selectEmployee = function (item) {
+                    $scope.employeeSearchString = item.surname + " " + item.name + " " + item.patronymic;
+                    $scope.protocolInfo.verificationEmployeeId = item.id;
+                }
+
+            // сохранение в БД;
+            $scope.addProtocol = function () {
+                    if (buildFormData()){
+                    $http({
+                        url: "/journals/protocols/form",
+                        method: "POST",
+                        data: formData,
+                        headers: {
+                            'Accept': '*/*',
+                            'Content-Type': undefined
+                        }
+                    }).then(function successCallback(response) {
+                        alert(response.data.message);
+                        formData = new FormData();
+                        window.location.href = "/journal/" + idAttr + "?id=" + idAttr;
+                    }, function errorCallback(response) {
+                        alert(response.data.message);
+                        $scope.buildFormData();
+                    });
+                }
+            }
+    
+            //Подготовка formData для отправки
+            let formData = new FormData();
+            function buildFormData() {
+                if ($scope.protocolInfo.number == null){
+                    alert("Введите номер протокола");
+                    return false;
+                }
+                if (file.files[0] == null){
+                    alert("Выберите файл!");
+                    return false;
+                }
+                console.log($scope.protocolInfo.verificationDate);
+                $scope.protocolInfo.journalId = idAttr;
+                formData.append('protocolInfo', JSON.stringify($scope.protocolInfo));
+                formData.append('files', file.files[0]);
+                return true;
+            }
+
+
+    
+    
+            function getCurrentUser() {
+                $http({
+                    url: "/users/username",
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.currentUser = response.data;
+                });
+            }
+            getCurrentUser();
+
+    
+
+    
+        });
+    </script>
+</body>
+
+</html>

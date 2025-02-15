@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Сведения о пользователе</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-app="USER_CARD" ng-controller="USER_CARD_CTRL">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-7">
+                <nav class="navbar navbar-expand  rounded">
+                    <div class="container-fluid justify-content-start">
+                        <div class="nav">
+                            <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="/settings">Администрирование</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="/user">Список пользователей</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link text-info" href="{{reference}}">Редактирование</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-md-3">
+                <nav class="navbar bg-body-tertiary">
+                    <form class="container-fluid justify-content-end">
+                        <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}}
+                            {{currentUser.name}}</label>
+                        <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+                    </form>
+                </nav>
+            </div>
+        </div>
+
+        <p></p>
+        <h4>Сведения о пользователе</h4>
+        <p></p>
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <dl class="row text-start">
+                    <dt class="col-sm-6">Логин</dt>
+                    <dd ng-model="type" class="col-sm-6">{{user.username}}</dd>
+
+                    <dt class="col-sm-6">Фамилия</dt>
+                    <dd ng-model="type" class="col-sm-6">{{user.surname}}</dd>
+
+                    <dt class="col-sm-6">Имя</dt>
+                    <dd ng-model="type" class="col-sm-6">{{user.name}}</dd>
+
+                    <dt class="col-sm-6 text-truncate">Отчество</dt>
+                    <dd ng-model="type" class="col-sm-6">{{user.patronymic}}</dd>
+
+                    <dt class="col-sm-6">Номер телефона</dt>
+                    <dd ng-model="type" class="col-sm-6">{{user.phoneNumber}}</dd>
+
+                    <dt class="col-sm-6">Уровни доступа</dt>
+                    <dd ng-model="type" class="col-sm-6">{{roles}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("USER_CARD", []);
+        var idAttr = new URL(document.URL).searchParams.get("id");
+        app.controller("USER_CARD_CTRL", function ($scope, $http) {
+            $scope.reference = "/user/form/" + idAttr + "?id=" + idAttr
+
+            $scope.getUser = function () {
+                $http({
+                    url: "/users/" + idAttr,
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.user = response.data;
+                    buildRoleString();
+                });
+
+            }
+
+            $scope.getUser();
+
+            $scope.roles = "";
+            function buildRoleString(){
+                $scope.roles = $scope.user.roles.reduce((roles, currentUser) => roles + currentUser.pseudonym + ', ',
+                 "").trim().slice(0,-1);
+            }
+
+
+            function getCurrentUser() {
+                $http({
+                    url: "/users/username",
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.currentUser = response.data;
+                });
+            }
+            getCurrentUser();
+
+        });
+
+
+    </script>
+</body>
+
+</html>

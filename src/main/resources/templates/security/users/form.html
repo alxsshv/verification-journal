@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Список пользователей</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-app="USER_FORM" ng-controller="USER_FORM_CTRL">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-9">
+                <nav class="navbar navbar-expand  rounded">
+                    <div class="container-fluid justify-content-start">
+                        <div class="nav">
+                            <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="/settings">Администрирование</a>
+                        </div>
+                        <div class="nav">
+                            <a class="nav-link" href="/user">Список пользователей</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-md-3">
+                <nav class="navbar bg-body-tertiary">
+                    <form class="container-fluid justify-content-end">
+                        <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}}
+                            {{currentUser.name}}</label>
+                        <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+                    </form>
+                </nav>
+            </div>
+        </div>
+        <p></p>
+        <h4>Введите данные, необходимые для добавления пользователя</h4>
+        <p></p>
+        <div class="row justify-content-start">
+            <div class="col-md-4">
+                <span class="input-group-text">Логин</span>
+                <input type="text" ng-model="user.username" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Пароль</span>
+                <input type="password" ng-model="user.password" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Подтверждение пароля</span>
+                <input type="password" ng-model="user.passwordConfirm" class="form-control" value="" required>
+                <p></p>
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">Учетная запись активна </label>
+              
+            </div>
+            <div class="col-md-4">
+                <span class="input-group-text">Фамилия</span>
+                <input type="text" ng-model="user.surname" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Имя</span>
+                <input type="text" ng-model="user.name" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Отчество</span>
+                <input type="text" ng-model="user.patronymic" class="form-control" value="" required>
+                <p></p>
+                <span class="input-group-text">Рабочий номер телефона</span>
+                <input type="text" ng-model="user.phoneNumber" class="form-control" value="" required>
+            </div>
+            <div class="col-md-4">
+                <div class="table-responsive" style="max-height: 165px; height: 165px;">
+                <table class="table table-primary table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td>Уровни доступа пользователя</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in user.roles" value="{{item}}">
+                            <td>{{item.pseudonym}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                <p></p>
+                <label class="form-label" for="inputAccess">Выберите уровень доступа</label>
+                <select class="form-control" id="inputAcess" ng-model="role"
+                    ng-options="role as role.pseudonym for role in roles track by role.pseudonym"
+                    required>
+                </select>
+                <p></p>
+                    <button class="btn btn-outline-info" ng-click="addRole()" type="button">Добавить уровень доступа</button>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-2">
+                    <p></p>
+                    <button class="btn btn-primary" ng-click="save()" type="button">Добавить пользователя</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("USER_FORM", []);
+        app.controller("USER_FORM_CTRL", function ($scope, $http) {
+
+            // сохранение в БД;
+            $scope.save = function () {
+                if ($scope.user.password === $scope.user.passwordConfirm) {
+                    $http({
+                        url: "/users",
+                        method: "POST",
+                        data: $scope.user
+                    }).then(function successCallback(response) {
+                        console.log($scope.user);
+                        alert(response.data.message);
+                        window.location.href="/user";
+                    }, function errorCallback(response) {
+                        alert(response.data.message)
+                    });
+                } else {
+                    alert("Введенные пароли не совпадают");
+                }
+            }
+
+            $scope.roles = [];
+            function getRoles() {
+                    $http({
+                        url: "/roles",
+                        method: "GET"
+                    }).then(function (response) {
+                        $scope.roles = response.data;
+                        console.log($scope.roles);
+                    });
+            }
+
+            $scope.user={};
+            $scope.user.roles = [];
+            $scope.addRole = function () {
+                $scope.user.roles.push($scope.role);
+             }
+
+  
+
+            getRoles();
+
+            function getCurrentUser() {
+                $http({
+                    url: "/users/username",
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.currentUser = response.data;
+                });
+            }
+            getCurrentUser();
+
+        });
+    </script>
+</body>
+
+</html>

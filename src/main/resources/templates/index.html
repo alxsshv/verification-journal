@@ -1,0 +1,163 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Учет поверочной деятельности</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body ng-app="MAIN" ng-controller="MAIN_CTRL">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-md-9">
+        <nav class="navbar navbar-expand  rounded">
+          <div class="container-fluid justify-content-start">
+            <div class="nav">
+              <a class="nav-link" sec:authorize="hasRole('SYSTEM_ADMIN')" href="/settings">Администрирование</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="col-md-3">
+        <nav class="navbar bg-body-tertiary">
+          <form class="container-fluid justify-content-end">
+            <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}} {{currentUser.name}}</label>
+            <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+          </form>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row text-primary-emphasis">
+      <div class="text-primary-emphasis">
+        <p></p>
+        <h4>Учет поверочной деятельности</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 text-start">
+        <div class="btn-group-vertical" role="group" aria-label="vertical_menu">
+          <a class="btn btn-primary btn-lg" href="/journal" role="button">Журналы поверки</a>
+          <a class="btn btn-primary btn-lg" sec:authorize="hasRole('VERIFICATION_EMPLOYEE')" href="/journal/protocol/wait" role="button">Подписание протоколов<span
+              class="badge text-bg-secondary" ng-model="protocolsWaitCount">{{protocolsWaitCount}}</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="pleaseWaitMessage" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto text-primary">Поиск информации в ФГИС "Аршин"</strong>
+        </div>
+        <div class="toast-body">
+          Пожалуйста ожидайте
+        </div>
+      </div>
+
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" sec:authorize="hasRole('SYSTEM_ADMIN')">
+        <div id="findWaitUsersMessage" class="toast text-bg-primary" role="alert" aria-live="assertive"
+          aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto text-primary">Пользователи ожидают регистрации</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+          </div>
+          <div class="toast-body" ng-model="waitCount">
+            {{waitCount}} пользователей ожидают проверки аккаунтов
+          </div>
+        </div>
+      </div>
+
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" sec:authorize="hasRole('VERIFICATION_EMPLOYEE')">
+        <div id="findWaitProtocolsMessage" class="toast text-bg-primary" role="alert" aria-live="assertive"
+          aria-atomic="true">
+          <div class="toast-header">
+            <strong class="me-auto text-primary">Протоколы необходимо подписать</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+          </div>
+          <div class="toast-body" ng-model="waitCount">
+            {{protocolsWaitCount}} протоколов у Вас на подписании
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="js/angular.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript">
+    var app = angular.module("MAIN", []);
+    app.controller("MAIN_CTRL", function ($scope, $http) {
+
+      $scope.updateReportsFromArshin = function () {
+        showMessage("pleaseWaitMessage");
+        $http({
+          url: "/reports/verifications/update/all",
+          method: "GET"
+        }).then(function (response) {
+          alert(response.data.message);
+          hideMessage("pleaseWaitMessage");
+        });
+
+      }
+
+      function getWaitCheckUsersCount() {
+        $http({
+          url: "/users/wait/count",
+          method: "GET"
+        }).then(function (response) {
+          $scope.waitCount = response.data;
+          if ($scope.waitCount > 0) {
+            showMessage("findWaitUsersMessage");
+          }
+        });
+      }
+      getWaitCheckUsersCount();
+
+
+      function showMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.show();
+      }
+
+      function hideMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.hide();
+      }
+
+      function getWaitingSignProtocolsCount() {
+        $http({
+          url: "/journals/protocols/signing/wait/count",
+          method: "GET"
+        }).then(function (response) {
+          $scope.protocolsWaitCount = response.data;
+          if ($scope.protocolsWaitCount > 0) {
+            showMessage("findWaitProtocolsMessage");
+          }
+        });
+      }
+      getWaitingSignProtocolsCount();
+
+
+      function getCurrentUser() {
+        $http({
+          url: "/users/username",
+          method: "GET"
+        }).then(function (response) {
+          $scope.currentUser = response.data;
+        });
+      }
+
+      getCurrentUser();
+
+
+    });
+  </script>
+</body>
+
+</html>
