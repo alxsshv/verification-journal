@@ -26,6 +26,8 @@ public class ProtocolDto {
     private UserDto verificationEmployee;
     private boolean awaitingSigning;
     private boolean signed;
+    private String miModification;
+    private String miSerialNum;
     private String uploadingDate;
     private String updatingDate;
 

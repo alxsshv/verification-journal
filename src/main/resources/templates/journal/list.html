@@ -91,13 +91,13 @@
                     <th>Номер</th>
                     <th>Название</th>
                     <th>Описание</th>
-                    <th></th>
+                    <th sec:authorize="hasRole('SYSTEM_ADMIN')"></th>
                 </tr>
                 <tr ng-repeat="item in contentlist">
-                    <td><a href="{{viewReference}}/{{item.id}}?id={{item.id}}">{{item.number}}</a></td>
+                    <td><a href="{{viewReference}}/{{item.id}}?id={{item.id}}">Журнал №{{item.number}}</a></td>
                     <td>{{item.title}}</td>
                     <td>{{item.description}}</td>
-                    <td sec:authorize="hasRole('VERIFICATION_MANAGER')"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal"
+                    <td sec:authorize="hasRole('SYSTEM_ADMIN')"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal"
                             ng-click="getDeleteableId(item.id)" type="button">Удалить</button></td>
                 </tr>
             </table>

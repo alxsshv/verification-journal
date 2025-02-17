@@ -18,7 +18,7 @@
                             <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
                         </div>
                         <div class="nav">
-                            <a class="nav-link" href="/journal/">Журналы поверки</a>
+                            <a class="nav-link" href="/journal">Журналы поверки</a>
                         </div>
                         <div class="nav">
                             <a class="nav-link" href="{{reference}}">К текущему журналу</a>
@@ -49,36 +49,41 @@
                     <input type="text" ng-model="protocolInfo.number" placeholder="XXX" class="form-control border-primary"
                         id="inputMiType" value="" required>
                 </div>
-                <div class="col-md-9">
-                    <label for="inputText2" class="form-label">Описание</label>
-                    <input type="text" ng-model="protocolInfo.description" placeholder="Пример: Протокол периодической поверки вольтметра"
+                <div class="col-md-6">
+                    <label for="inputText2" class="form-label">Модификация СИ</label>
+                    <input type="text" ng-model="protocolInfo.miModification" placeholder="Пример: Вольтметр В7-78/2"
                         class="form-control border-primary" id="inputText2" value="" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="inputText2" class="form-label">Зав.№</label>
+                    <input type="text" ng-model="protocolInfo.miSerialNum" placeholder="Пример: MY12322"
+                           class="form-control border-primary" id="inputText3" value="" required>
                 </div>
             </div>
             <p></p>
             <div class="row g-2">
-                <div class="col-md-9">
-                    <label for="inputText2" class="form-label">Средство измерений</label>
-                    <input type="text" ng-model="mi"
-                        class="form-control dropdown-toggle border-primary" id="inputText3" value="">
-                </div>
                 <div class="col-md-3">
                     <label for="inputDate" class="form-label">Дата поверки</label>
                     <input type="date" ng-model="protocolInfo.verificationDate" ng-model-options="{timezone: 'UTC'}" class="form-control border-primary"
                         id="inputDate" value="" required>
                 </div>
+                <div class="col-md-9">
+                    <label for="inputText2" class="form-label">Поверитель</label>
+                    <input type="text" ng-change="searchEmployee()" ng-model="employeeSearchString" data-bs-toggle="dropdown"
+                           class="form-control dropdown-toggle border-primary" id="inputText5" value="">
+
+                    <ul class="dropdown-menu" ng-model="employee">
+                        <li ng-repeat="item in employees" value="{{item}}"> <a class="dropdown-item" ng-click="selectEmployee(item)"
+                                                                               href="#">{{item.surname}} {{item.name}} {{item.patronymic}}</a></li>
+                    </ul>
+                </div>
             </div>
             <p></p>
             <div class="row g-2">
                 <div class="col-md-12">
-                    <label for="inputText2" class="form-label">Поверитель</label>
-                    <input type="text" ng-change="searchEmployee()" ng-model="employeeSearchString" data-bs-toggle="dropdown"
-                        class="form-control dropdown-toggle border-primary" id="inputText4" value="">
-
-                    <ul class="dropdown-menu" ng-model="employee">
-                        <li ng-repeat="item in employees" value="{{item}}"> <a class="dropdown-item" ng-click="selectEmployee(item)"
-                                href="#">{{item.surname}} {{item.name}} {{item.patronymic}}</a></li>
-                    </ul>
+                    <label for="inputText2" class="form-label">Примечание</label>
+                    <input type="text" ng-model="protocolInfo.description"
+                           class="form-control dropdown-toggle border-primary" id="inputText4" value="">
                 </div>
             </div>
         </div>

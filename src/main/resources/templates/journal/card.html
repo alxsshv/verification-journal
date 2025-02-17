@@ -109,7 +109,7 @@
                     <th></th>
                     <th>Дата поверки</th>
                     <th>Средство измерений</th>
-                    <th>Описание</th>
+                    <th>Примечание</th>
                     <th>Формат файла</th>
                     <th>Файл подписан</th>
                     <th></th>
@@ -119,12 +119,12 @@
                     <td><a href="{{contentUrl}}/{{item.id}}">{{item.number}}</a></td>
                     <td>от</td>
                     <td>{{item.verificationDate | date: "dd.MM.yyyy"}}</td>
-                    <td><a href="/mi/{{item.instrumentDto.id}}?id={{item.instrumentDto.id}}"> {{item.instrumentDto.modification}} зав. №{{item.instrumentDto.serialNum}}</a></td>
+                    <td>{{item.miModification}} зав. №{{item.miSerialNum}}</a></td>
                     <td>{{item.description}}</td>
                     <td>{{item.extension}}</td>
                     <td><input type="checkbox" ng-model="item.signed" disabled></td>
                     <td><button class="btn btn-primary" ng-disabled="item.signed || currentUser.surname != item.verificationEmployee.surname" ng-click="setDigitalSignature(item.id)" type="button">Подписать</button></td>
-                    <td><button class="btn btn-primary" sec:authorize="hasRole('VERIFICATION_MANAGER')" data-bs-toggle="modal" data-bs-target="#modal"
+                    <td><button class="btn btn-primary" sec:authorize="hasRole('VERIFICATION_EMPLOYEE')" data-bs-toggle="modal" data-bs-target="#modal"
                             ng-click="getDeleteableId(user.id)" type="button">Удалить</button></td>
                 </tr>
             </table>
@@ -176,6 +176,7 @@
                     method: "GET"
                 }).then(function (response) {
                     $scope.contentlist = response.data.content;
+                    console.log($scope.contentlist);
                     $scope.createPaginationParams(response.data.totalPages);
                 });
             }
@@ -186,6 +187,7 @@
                     method: "GET"
                 }).then(function (response) {
                     $scope.contentlist = response.data.content;
+                    console.log($scope.contentlist);
                     $scope.createPaginationParams(response.data.totalPages);
                 });
             }
