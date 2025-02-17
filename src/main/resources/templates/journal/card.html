@@ -125,7 +125,7 @@
                     <td><input type="checkbox" ng-model="item.signed" disabled></td>
                     <td><button class="btn btn-primary" ng-disabled="item.signed || currentUser.surname != item.verificationEmployee.surname" ng-click="setDigitalSignature(item.id)" type="button">Подписать</button></td>
                     <td><button class="btn btn-primary" sec:authorize="hasRole('VERIFICATION_EMPLOYEE')" data-bs-toggle="modal" data-bs-target="#modal"
-                            ng-click="getDeleteableId(user.id)" type="button">Удалить</button></td>
+                            ng-click="getDeleteableId(item.id)" type="button">Удалить</button></td>
                 </tr>
             </table>
         </div>
@@ -159,6 +159,23 @@
         </div>
 
     </div>
+    <!-- Модальное окно -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="Подтверждение удаления" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Вы уверены, что хотите удалить протокол поверки?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" ng-click="delete()">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/angular.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
@@ -270,7 +287,31 @@
                         hideMessage("pleaseWaitMessage");
                         alert(response.data.message);
                     });
-        }        
+        }
+
+            $scope.deleteableId = -1;
+            $scope.getDeleteableId = function (id) {
+                $scope.deleteableId = id;
+                
+            }
+            
+            $scope.delete = function () {
+                var myModalEl = document.getElementById('modal')
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                console.log($scope.deleteableId);
+                $http({
+                    url: "/journals/protocols/" + $scope.deleteableId,
+                    method: "DELETE"
+                }).then(function successCallback(response) {
+                            alert(response.data.message);
+                            window.location.reload();
+                        }, function errorCallback(response) {
+                            alert(response.data.message)
+                        });
+            }
+
+
 
             function getCurrentUser() {
                 $http({

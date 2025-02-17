@@ -87,7 +87,7 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     }
 
     @Override
-    public void delete(long id) throws IOException {
+    public void delete(long id) {
         protocolService.deleteById(id);
     }
 

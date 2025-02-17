@@ -62,7 +62,6 @@
                     <th>Формат файла</th>
                     <th>Файл подписан</th>
                     <th></th>
-                    <th></th>
                 </tr>
                 <tr ng-repeat="item in contentlist">
                     <td><a href="{{contentUrl}}/{{item.id}}">{{item.number}}</a></td>
@@ -73,9 +72,7 @@
                     <td>{{item.extension}}</td>
                     <td><input type="checkbox" ng-model="item.signed" disabled></td>
                     <td><button class="btn btn-primary" ng-disabled="item.signed || currentUser.surname != item.verificationEmployee.surname" ng-click="setDigitalSignature(item.id)" type="button">Подписать</button></td>
-                    <td><button class="btn btn-primary" sec:authorize="hasRole('VERIFICATION_MANAGER')" data-bs-toggle="modal" data-bs-target="#modal"
-                            ng-click="getDeleteableId(user.id)" type="button">Удалить</button></td>
-                </tr>
+               </tr>
             </table>
         </div>
 
