@@ -95,7 +95,7 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     }
 
     @Override
-    public void deleteAll(long journal_id) throws IOException {
+    public void deleteAll(long journal_id) {
         Journal journal = journalService.getById(journal_id);
         protocolService.deleteAll(journal);
     }
