@@ -42,7 +42,7 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
         protocolDto.setNumber(protocolFileInfo.getNumber());
         protocolDto.setDescription(protocolFileInfo.getDescription());
         final String verificationDate = protocolFileInfo.getVerificationDate().split("T")[0];
-        protocolDto.setVerificationDate(LocalDate.parse(verificationDate));
+        protocolDto.setVerificationDate(verificationDate);
         protocolService.upload(file,protocolDto, journal);
     }
 
