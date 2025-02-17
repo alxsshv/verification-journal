@@ -32,7 +32,7 @@ public interface ProtocolServiceFacade {
 
     ResponseEntity<?> getProtocolFile(long id);
 
-    void delete(long id) throws IOException;
+    void delete(long id);
 
     void deleteAll(long journalId) throws IOException;
 }

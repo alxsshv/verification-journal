@@ -157,11 +157,12 @@ public class ProtocolServiceImpl implements ProtocolService {
     public void deleteById(long id) {
         Protocol protocol = getProtocolById(id);
         try {
+            System.out.println(pathsConfig.getOriginProtocolsPath() + "/" + protocol.getOriginalFilename());
+            Files.deleteIfExists(Path.of(pathsConfig.getOriginProtocolsPath() + "/" + protocol.getStorageFileName()));
             Files.deleteIfExists(Path.of(pathsConfig.getSignedProtocolsPath() + "/" + protocol.getSignedFileName()));
-            Files.deleteIfExists(Path.of(pathsConfig.getOriginProtocolsPath() + "/" + protocol.getOriginalFilename()));
             protocolRepository.deleteById(id);
         } catch (IOException ex){
-            String errorMessage = "Ошибка удаления файла";
+            String errorMessage = "Ошибка удаления файла.";
             log.info("{}:{}", errorMessage, ex.getMessage());
             throw new ProtocolStorageException(errorMessage);
         }

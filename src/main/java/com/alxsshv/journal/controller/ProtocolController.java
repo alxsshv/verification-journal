@@ -96,4 +96,12 @@ public class ProtocolController {
         }
         return protocolServiceFacade.findNotSigningProtocolsByUserAndSearchString(user, searchString);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProtocolById(@PathVariable("id") long id){
+        protocolServiceFacade.delete(id);
+        String okMessage = "Протокол удален";
+        log.info("{} id= {}", okMessage, id);
+        return ResponseEntity.ok(new ServiceMessage(okMessage));
+    }
 }
