@@ -41,41 +41,6 @@
         <div class="row">
             <nav class="navbar bg-body-tertiary">
                 <div class="container-fluid justify-content-start">
-                    <div class="nav">
-                        <div class="btn-group">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Сортировать
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item"
-                                        href="{{viewReference}}&page=0&dir=ASC&size={{pageSize}}&journal={{journal_id}}&search={{searchString}}">По возрастанию номеров</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                        href="{{viewReference}}&page=0&dir=DESC&size={{pageSize}}&journal={{journal_id}}&search={{searchString}}">По убыванию номеров</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="nav">
-                        <div class="btn-group">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Выводить по
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item"
-                                        href="{{viewReference}}&page=0&dir={{sortDirection}}&size=10&journal={{journal_id}}&search={{searchString}}">10</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                        href="{{viewReference}}&page=0&dir={{sortDirection}}&size=20&journal={{journal_id}}&search={{searchString}}">20</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                        href="{{viewReference}}&page=0&dir={{sortDirection}}&size=50&journal={{journal_id}}&search={{searchString}}">50</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
                     <form class="d-flex" role="search">
                         <input ng-model="searchString" style="display: inline-block; max-width: 300px;"
@@ -123,7 +88,7 @@
             $scope.viewReference = "/journal/" + idAttr + "?id=" + idAttr ;
             $scope.contentUrl = "/journals/protocols";
 
-            function getContentlist() {
+            $scope.getContentlist = function() {
                 $http({
                     url: $scope.contentUrl + "/signing/wait?search=" + $scope.searchString,
                     method: "GET"
@@ -132,7 +97,8 @@
                 });
             }
             
-            getContentlist()
+            $scope.getContentlist()
+
 
 
         $scope.setDigitalSignature = function(id){

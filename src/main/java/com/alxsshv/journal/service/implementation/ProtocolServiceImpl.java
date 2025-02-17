@@ -122,7 +122,7 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public List<ProtocolDto> findNotSigningProtocolsByUserAndSearchString(User user, String searchString) {
         final List<Protocol> protocols = protocolRepository
-                .findBySignedAndVerificationEmployeeAndDescriptionIgnoreCaseContaining(false, user, searchString);
+                .findNotSignedProtocolsByUserAndSearchSting(user.getId(), searchString);
         return protocols.stream().map(protocol -> mapper.map(protocol, ProtocolDto.class)).toList();
     }
 
