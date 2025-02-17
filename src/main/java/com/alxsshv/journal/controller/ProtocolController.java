@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,8 +38,6 @@ public class ProtocolController {
     private DigitalSignatureService digitalSignatureService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ModelMapper mapper;
 
     @PostMapping("/form")
     public ResponseEntity<?> addProtocol(
@@ -49,7 +46,7 @@ public class ProtocolController {
         ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
         ProtocolFileInfo protocolFileInfo = mapper.readValue(fileInfo, ProtocolFileInfo.class);
         protocolServiceFacade.upload(file,protocolFileInfo);
-        String successMessage = "Протокол поверки " + protocolFileInfo.getDescription() + " добавлен";
+        String successMessage = "Протокол поверки  №" + protocolFileInfo.getNumber() + " добавлен";
         log.info(successMessage);
         return ResponseEntity.status(201).body(new ServiceMessage(successMessage));
     }

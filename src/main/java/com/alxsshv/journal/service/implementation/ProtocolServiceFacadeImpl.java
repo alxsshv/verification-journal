@@ -2,6 +2,7 @@ package com.alxsshv.journal.service.implementation;
 
 import com.alxsshv.journal.dto.ProtocolDto;
 import com.alxsshv.journal.dto.ProtocolFileInfo;
+import com.alxsshv.journal.dto.mapper.ProtocolFileInfoToProtocolDtoMapper;
 import com.alxsshv.journal.model.Journal;
 import com.alxsshv.journal.model.Protocol;
 import com.alxsshv.journal.service.interfaces.JournalService;
@@ -35,13 +36,9 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     @Override
     public void upload(MultipartFile file, ProtocolFileInfo protocolFileInfo) throws IOException {
         final Journal journal = journalService.getById(protocolFileInfo.getJournalId());
-        UserDto userDto = userService.findById(protocolFileInfo.getVerificationEmployeeId());
-        final ProtocolDto protocolDto = new ProtocolDto();
-        protocolDto.setVerificationEmployee(userDto);
-        protocolDto.setNumber(protocolFileInfo.getNumber());
-        protocolDto.setDescription(protocolFileInfo.getDescription());
-        final String verificationDate = protocolFileInfo.getVerificationDate().split("T")[0];
-        protocolDto.setVerificationDate(verificationDate);
+        final UserDto userDto = userService.findById(protocolFileInfo.getVerificationEmployeeId());
+        final ProtocolDto protocolDto = ProtocolFileInfoToProtocolDtoMapper
+                .mapToProtocolDto(protocolFileInfo, userDto);
         protocolService.upload(file,protocolDto, journal);
     }
 

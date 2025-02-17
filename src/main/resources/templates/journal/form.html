@@ -8,13 +8,32 @@
 </head>
 <body ng-app="VERIFICATION_JOURNAL_FORM" ng-controller="VERIFICATION_JOURNAL_FORM_CTRL">
 <div class="container text-center">
-    <nav class="navbar bg-body-tertiary">
-        <form class="container-fluid justify-content-start">
-            <button class="btn btn-outline-success me-2" type="button" onclick="location.href='/'">Домой</button>
-            <button class="btn btn-outline-success me-2" onclick="location.href='/journal'" type="button">Cписок журналов</button>
-        </form>
+    <div class="row">
+        <div class="col-md-7">
+            <nav class="navbar navbar-expand  rounded">
+                <div class="container-fluid justify-content-start">
+                    <div class="nav">
+                        <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+                    </div>
+                    <div class="nav">
+                        <a class="nav-link" href="/journal">Журналы поверки</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
 
-    </nav>
+        <div class="col-md-3">
+            <nav class="navbar bg-body-tertiary">
+                <form class="container-fluid justify-content-end">
+                    <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}}
+                        {{currentUser.name}}</label>
+                    <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+                </form>
+            </nav>
+        </div>
+    </div>
+
+    <p></p>
     <div class="col-md-4">
           <span class="input-group-text">Номер</span>
           <input type="text" ng-model="journal.number" class="form-control" value="" required>
@@ -55,6 +74,16 @@
                 alert('Номер журнала не может быть пустым');
             }
             }
+
+            function getCurrentUser() {
+                $http({
+                    url: "/users/username",
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.currentUser = response.data;
+                });
+            }
+            getCurrentUser();
 
         });
 </script>

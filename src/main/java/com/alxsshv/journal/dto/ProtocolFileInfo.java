@@ -1,6 +1,5 @@
 package com.alxsshv.journal.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,16 +15,20 @@ public class ProtocolFileInfo {
     private String verificationDate;
     private long journalId;
     private long verificationEmployeeId;
-
+    private String miModification;
+    private String miSerialNum;
 
 
     @Override
     public String toString() {
         return "ProtocolFileInfo{" +
-                "number='" + number + '\'' +
+                "description='" + description + '\'' +
+                ", number='" + number + '\'' +
                 ", verificationDate='" + verificationDate + '\'' +
                 ", journalId=" + journalId +
                 ", verificationEmployeeId=" + verificationEmployeeId +
+                ", miModel='" + miModification + '\'' +
+                ", miSerialNum='" + miSerialNum + '\'' +
                 '}';
     }
 }

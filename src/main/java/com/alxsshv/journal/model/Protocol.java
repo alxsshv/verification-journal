@@ -44,6 +44,10 @@ public class Protocol {
     private boolean awaitingSigning;
     @Column(name = "signed")
     private boolean signed;
+    @Column(name = "mi_model")
+    private String miModification;
+    @Column(name = "mi_serial_number")
+    private String miSerialNum;
     @CreationTimestamp
     @Column(name = "uploading_date")
     private LocalDateTime uploadingDate;
