@@ -144,6 +144,20 @@
                 </ul>
             </nav>
         </div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" sec:authorize="hasRole('VERIFICATION_EMPLOYEE')">
+            <div id="pleaseWaitMessage" class="toast text-bg-primary" role="alert" aria-live="assertive"
+                 aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto text-primary">Протокол подписывется, ожидайте...</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+                <div class="toast-body" ng-model="waitCount">
+                    Выполняется добавление подписи на листы протокола поверки, защита протокола от изменений
+                </div>
+            </div>
+        </div>
+
     </div>
     <script src="/js/angular.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
@@ -231,14 +245,29 @@
                 }
             }
 
+        function showMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.show();
+      }
+
+      function hideMessage(id) {
+        const message = document.getElementById(id);
+        const messageBootstrap = bootstrap.Toast.getOrCreateInstance(message);
+        messageBootstrap.hide();
+      }
+
         $scope.setDigitalSignature = function(id){
+            showMessage("pleaseWaitMessage");
             $http({
                     url: "/journals/protocols/signing/"+id,
                     method: "GET"
                 }).then(function successCallback(response) {
+                        hideMessage("pleaseWaitMessage");
                         alert(response.data.message);
                         window.location.reload();
                     }, function errorCallback(response) {
+                        hideMessage("pleaseWaitMessage");
                         alert(response.data.message);
                     });
         }        
