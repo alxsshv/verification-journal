@@ -48,16 +48,6 @@
       </div>
     </div>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <div id="pleaseWaitMessage" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto text-primary">Поиск информации в ФГИС "Аршин"</strong>
-        </div>
-        <div class="toast-body">
-          Пожалуйста ожидайте
-        </div>
-      </div>
-
       <div class="toast-container position-fixed bottom-0 end-0 p-3" sec:authorize="hasRole('SYSTEM_ADMIN')">
         <div id="findWaitUsersMessage" class="toast text-bg-primary" role="alert" aria-live="assertive"
           aria-atomic="true">
@@ -92,17 +82,6 @@
     var app = angular.module("MAIN", []);
     app.controller("MAIN_CTRL", function ($scope, $http) {
 
-      $scope.updateReportsFromArshin = function () {
-        showMessage("pleaseWaitMessage");
-        $http({
-          url: "/reports/verifications/update/all",
-          method: "GET"
-        }).then(function (response) {
-          alert(response.data.message);
-          hideMessage("pleaseWaitMessage");
-        });
-
-      }
 
       function getWaitCheckUsersCount() {
         $http({
