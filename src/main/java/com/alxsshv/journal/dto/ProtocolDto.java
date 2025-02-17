@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,12 +21,12 @@ public class ProtocolDto {
     private String signedFileName;
     private String description;
     private String extension;
-    private LocalDate verificationDate;
+    private String verificationDate;
     private long journalId;
     private UserDto verificationEmployee;
     private boolean awaitingSigning;
     private boolean signed;
-    private LocalDateTime uploadingDate;
-    private LocalDateTime updatingDate;
+    private String uploadingDate;
+    private String updatingDate;
 
 }

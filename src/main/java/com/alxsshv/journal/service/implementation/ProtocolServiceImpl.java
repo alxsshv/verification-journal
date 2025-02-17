@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,6 +62,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         protocol.setStorageFileName(storageFilename);
         protocol.setAwaitingSigning(true);
         protocol.setSigned(false);
+        protocol.setVerificationDate(LocalDate.parse(protocolDto.getVerificationDate()));
         file.transferTo(new File(pathsConfig.getOriginProtocolsPath() + "/" + storageFilename));
         protocolRepository.save(protocol);
         log.info("Протокол поверки \"{}\" успешно загружен на сервер", filename);

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -42,7 +41,7 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
         protocolDto.setNumber(protocolFileInfo.getNumber());
         protocolDto.setDescription(protocolFileInfo.getDescription());
         final String verificationDate = protocolFileInfo.getVerificationDate().split("T")[0];
-        protocolDto.setVerificationDate(LocalDate.parse(verificationDate));
+        protocolDto.setVerificationDate(verificationDate);
         protocolService.upload(file,protocolDto, journal);
     }
 
@@ -96,7 +95,7 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     }
 
     @Override
-    public void deleteAll(long journal_id) throws IOException {
+    public void deleteAll(long journal_id) {
         Journal journal = journalService.getById(journal_id);
         protocolService.deleteAll(journal);
     }
