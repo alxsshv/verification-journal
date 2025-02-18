@@ -45,6 +45,12 @@ public class WebController {
         return "journal/card";
     }
 
+    @GetMapping("/journal/edit/{id}")
+    public String getJournalEditForm(@PathVariable("id") long id, Model model) {
+        model.addAttribute("id", id);
+        return "journal/edit";
+    }
+
     @GetMapping("/journal/add/{id}")
     public String getProtocolAddingForm(@PathVariable("id") long id, Model model){
         model.addAttribute("id",id);

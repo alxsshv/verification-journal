@@ -2,9 +2,7 @@ package com.alxsshv.journal.utils;
 
 import com.alxsshv.security.model.User;
 import lombok.AllArgsConstructor;
-import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -21,12 +19,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
-import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA;
 
 
 @Component
@@ -34,7 +30,6 @@ import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA;
 public class PDFEditor {
     @Autowired
     private StringTransliterator transliterator;
-    private static final String FONT_PATH = "src/main/resources/static/fonts/GentiumPlus.ttf";
 
     public void addSignatureStamp(String sourceFilePath, String signedFilePath, User user) throws IOException {
         PDDocument stampedDocument = new PDDocument();

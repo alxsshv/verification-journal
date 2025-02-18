@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Журнал</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app="VERIFICATION_JOURNAL_FORM" ng-controller="VERIFICATION_JOURNAL_FORM_CTRL">
+<div class="container text-center">
+    <div class="row">
+        <div class="col-md-7">
+            <nav class="navbar navbar-expand  rounded">
+                <div class="container-fluid justify-content-start">
+                    <div class="nav">
+                        <a class="btn btn-sm btn-outline-primary" role="button" href="/">Главная</a>
+                    </div>
+                    <div class="nav">
+                        <a class="nav-link" href="/journal">Журналы поверки</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="col-md-3">
+            <nav class="navbar bg-body-tertiary">
+                <form class="container-fluid justify-content-end">
+                    <label class="d-flex p-2" ng-model="currentUser">{{currentUser.surname}}
+                        {{currentUser.name}}</label>
+                    <a class="btn btn-sm btn-outline-secondary" href="/logout" role="button">Выйти</a>
+                </form>
+            </nav>
+        </div>
+    </div>
+
+    <p></p>
+    <div class="row justify-content-center text-start">
+    <div class="col-md-7">
+          <label>Номер</label>
+          <input type="text" ng-model="journal.number" disabled class="form-control" value="" required>
+
+          <label>Наименование</label>
+          <input type="text" ng-model="journal.title" class="form-control" value="" required>
+
+          <label>Описание</label>
+          <input type="text" ng-model="journal.description" class="form-control" value="" required>
+
+    </div>
+</div>
+<p></p>
+<div class="col-12">
+    <button class="btn btn-primary" ng-click="updateJournal()" type="button">Сохранить</button>
+  </div>
+</div>
+<script src="/js/angular.min.js"></script>
+<script src="/js/jquery-3.7.1.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+    var app = angular.module("VERIFICATION_JOURNAL_FORM", []);
+    var idAttr = new URL(document.URL).searchParams.get("id");
+    app.controller("VERIFICATION_JOURNAL_FORM_CTRL", function($scope, $http){
+      
+        function getJournal() {
+            console.log(idAttr);
+                $http({
+                    url: "/journals/" + idAttr,
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.journal = response.data;
+                });
+
+            }
+
+            getJournal();
+
+
+            $scope.updateJournal = function(){
+             if ($scope.journal.number != null){
+                $http({
+                url: "/journals/"+ idAttr,
+                method: "PUT",
+                data: $scope.journal
+            }).then(function successCallback(response){
+                console.log($scope.journal);
+                alert(response.data.message);
+                window.location.href = "/journal/"+ idAttr + "?id=" + idAttr;
+                }, function errorCallback(response){
+                   alert(response.data.message)
+                });
+            } else {
+                alert('Номер журнала не может быть пустым');
+            }
+            }
+
+            function getCurrentUser() {
+                $http({
+                    url: "/users/username",
+                    method: "GET"
+                }).then(function (response) {
+                    $scope.currentUser = response.data;
+                });
+            }
+            getCurrentUser();
+
+        });
+</script>
+</body>
+</html>

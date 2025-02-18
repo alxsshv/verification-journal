@@ -23,6 +23,10 @@
                         <div class="nav">
                             <a class="nav-link text-info" href="{{reference}}">Добавить протокол</a>
                         </div>
+                        <div class="nav">
+                            <a class="nav-link text-info" href="{{editReference}}">Редактировать</a>
+                        </div>
+
                     </div>
                 </nav>
             </div>
@@ -182,7 +186,8 @@
         var app = angular.module("VERIFICATION_JOURNAL_CARD", []);
         var idAttr = new URL(document.URL).searchParams.get("id");
         app.controller("VERIFICATION_JOURNAL_CARD_CTRL", function ($scope, $http) {
-            $scope.viewReference = "/journal/" + idAttr + "?id=" + idAttr ;
+            $scope.viewReference = "/journal/" + idAttr + "?id=" + idAttr;
+            $scope.editReference = "/journal/edit/" + idAttr + "?id=" + idAttr;
             $scope.reference = "/journal/add/" + idAttr + "?id=" + idAttr;
             $scope.contentUrl = "/journals/protocols";
             $scope.journal_id = idAttr;

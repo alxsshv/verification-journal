@@ -5,6 +5,7 @@ import com.alxsshv.journal.dto.JournalDto;
 import com.alxsshv.journal.service.interfaces.JournalService;
 import com.alxsshv.journal.utils.ServiceMessage;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/journals")
 @AllArgsConstructor
+@Slf4j
 public class JournalController {
     @Autowired
     private JournalService journalService;
@@ -49,8 +51,21 @@ public class JournalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JournalDto> getJournalById(@PathVariable("id") long id){
+    public ResponseEntity<JournalDto> getJournalById(@PathVariable("id") long id) {
         JournalDto journalDto = journalService.findById(id);
         return ResponseEntity.ok(journalDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ServiceMessage> updateJournal(@PathVariable("id") long id,
+                                                        @RequestBody JournalDto journalDto)  {
+        if (journalDto.getId() != id){
+            String errorMessage = "Идентифкатор обновляемого журнала отличается от идентификатора в даных для обновления";
+            log.error("{} id журнала={}, id для боновления={}", errorMessage, id, journalDto.getId());
+            return ResponseEntity.status(400).body(new ServiceMessage(errorMessage));
+        }
+        journalService.update(journalDto);
+        String okMessage = "Данные о журнале изменены";
+        return ResponseEntity.ok(new ServiceMessage(okMessage));
     }
 }
