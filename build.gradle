@@ -35,6 +35,10 @@ dependencies {
     annotationProcessor'org.projectlombok:lombok:1.18.36'
 }
 
+configurations.implementation {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}
+
 test {
     useJUnitPlatform()
     dependsOn(checkstyleMain, checkstyleTest)
