@@ -22,3 +22,7 @@ spring:
 paths:
   originProtocolsPath: /home/alexei/dev/protocols/origin
   signedProtocolsPath: /home/alexei/dev/protocols/signed
+
+logging:
+  file:
+    name: logs/application.log
