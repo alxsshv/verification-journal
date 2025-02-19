@@ -7,7 +7,6 @@ import com.alxsshv.journal.model.Journal;
 import com.alxsshv.journal.model.Protocol;
 import com.alxsshv.journal.repository.ProtocolRepository;
 import com.alxsshv.journal.service.interfaces.ProtocolService;
-import com.alxsshv.journal.utils.FileContentTypeSelector;
 import com.alxsshv.journal.utils.PathResolver;
 import com.alxsshv.security.model.User;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,18 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -52,8 +47,8 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public void upload(MultipartFile file, ProtocolDto protocolDto, Journal journal) throws IOException {
         final String filename = file.getOriginalFilename();
-        final String extension = filename.substring(filename.lastIndexOf(".")+1);
-        final String storageFilename = UUID.randomUUID()+ "." + filename;
+        final String extension = filename.substring(filename.lastIndexOf(".") + 1);
+        final String storageFilename = UUID.randomUUID() + "." + filename;
         pathResolver.createFilePathIfNotExist(pathsConfig.getOriginProtocolsPath());
         final Protocol protocol = mapper.map(protocolDto, Protocol.class);
         protocol.setJournal(journal);
@@ -76,20 +71,20 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Override
     public Page<ProtocolDto> findProtocolsByJournal(Journal journal, Pageable pageable) {
-        return protocolRepository.findByJournal(journal,pageable)
+        return protocolRepository.findByJournal(journal, pageable)
                 .map(protocol -> mapper.map(protocol, ProtocolDto.class));
     }
 
     @Override
     public Page<ProtocolDto> findProtocolByJournalAndSearchString(Journal journal, String searchString, Pageable pageable) {
-        return protocolRepository.findByJournalAndNumberIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(journal,searchString,searchString,pageable)
+        return protocolRepository.findByJournalAndNumberIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(journal, searchString, searchString, pageable)
                 .map(protocol -> mapper.map(protocol, ProtocolDto.class));
     }
 
     @Override
     public Protocol getProtocolById(long id) {
-        final Optional<Protocol> protocolOpt =  protocolRepository.findById(id);
-        if (protocolOpt.isEmpty()){
+        final Optional<Protocol> protocolOpt = protocolRepository.findById(id);
+        if (protocolOpt.isEmpty()) {
             throw new EntityNotFoundException("Протокол поверки не найден");
         }
         return protocolOpt.get();
@@ -97,14 +92,14 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Override
     public ResponseEntity<?> getProtocolFileById(long id) {
-        Protocol protocol = getProtocolById(id);
+        final Protocol protocol = getProtocolById(id);
         try {
             return buildResponseEntity(protocol);
-        } catch (IOException ex){
+        } catch (IOException ex) {
             log.error("Запрашиваемый файл не найден или повержден");
-            HttpHeaders headers = new HttpHeaders();
+            final HttpHeaders headers = new HttpHeaders();
             headers.add("Location", "/file_not_found");
-            return new ResponseEntity<>(null,headers, HttpStatus.FOUND);
+            return new ResponseEntity<>(null, headers, HttpStatus.FOUND);
         }
     }
 
@@ -127,10 +122,10 @@ public class ProtocolServiceImpl implements ProtocolService {
     }
 
     private ResponseEntity<?> buildResponseEntity(Protocol protocol) throws IOException {
-        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+        final ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                 .filename(protocol.getOriginalFilename(), StandardCharsets.UTF_8).build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(FileContentTypeSelector.getContentType(protocol.getExtension()));
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDisposition(contentDisposition);
         return ResponseEntity.ok()
                 .headers(headers)
@@ -138,9 +133,9 @@ public class ProtocolServiceImpl implements ProtocolService {
                         .of(resolveFilePath(protocol)))));
     }
 
-    private String resolveFilePath(Protocol protocol){
-        if (protocol.isSigned()){
-            return  pathsConfig.getSignedProtocolsPath() + "/" + protocol.getSignedFileName();
+    private String resolveFilePath(Protocol protocol) {
+        if (protocol.isSigned()) {
+            return pathsConfig.getSignedProtocolsPath() + "/" + protocol.getSignedFileName();
         }
         return pathsConfig.getOriginProtocolsPath() + "/" + protocol.getStorageFileName();
     }
@@ -155,13 +150,13 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Override
     public void deleteById(long id) {
-        Protocol protocol = getProtocolById(id);
+        final Protocol protocol = getProtocolById(id);
         try {
             Files.deleteIfExists(Path.of(pathsConfig.getOriginProtocolsPath() + "/" + protocol.getStorageFileName()));
             Files.deleteIfExists(Path.of(pathsConfig.getSignedProtocolsPath() + "/" + protocol.getSignedFileName()));
             protocolRepository.deleteById(id);
-        } catch (IOException ex){
-            String errorMessage = "Ошибка удаления файла.";
+        } catch (IOException ex) {
+            final String errorMessage = "Ошибка удаления файла.";
             log.info("{}:{}", errorMessage, ex.getMessage());
             throw new ProtocolStorageException(errorMessage);
         }
@@ -170,7 +165,7 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public void deleteAll(Journal journal) {
         final List<Protocol> protocols = protocolRepository.findByJournal(journal);
-        for (Protocol protocol : protocols){
+        for (Protocol protocol : protocols) {
             deleteById(protocol.getId());
         }
     }

@@ -1,6 +1,5 @@
 package com.alxsshv.config;
 
-
 import com.alxsshv.security.model.SystemSecurityRoles;
 import com.alxsshv.security.service.implementation.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -30,8 +29,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    public DaoAuthenticationProvider authenticationProvider() {
+        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
@@ -41,18 +40,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                               .requestMatchers("/js/**","/css/**","/login", "/registration", "/users/registration").permitAll()
+                               .requestMatchers("/js/**", "/css/**", "/login", "/registration", "/users/registration").permitAll()
                                 .requestMatchers("/organization/**").hasAnyRole(SystemSecurityRoles.USER.getName())
                                 .requestMatchers("/journal/**", "/users/username", "/users/search").hasAnyRole(SystemSecurityRoles.VERIFICATION_EMPLOYEE.getName())
                                 .requestMatchers("/settings/**", "/logs/**", "/journal/**", "/users/username", "/users/**").hasAnyRole(SystemSecurityRoles.SYSTEM_ADMIN.getName())
                                 .anyRequest().authenticated())
-                .formLogin(form->form.loginPage("/login").permitAll())
+                .formLogin(form -> form.loginPage("/login").permitAll())
                 .exceptionHandling(form -> form.accessDeniedPage("/access_denied"))
                 .build();
-
     }
-
-
-
-
 }

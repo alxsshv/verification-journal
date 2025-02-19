@@ -2,24 +2,19 @@ package com.alxsshv.security.controller;
 
 import com.alxsshv.config.AppConstants;
 import com.alxsshv.journal.utils.ServiceMessage;
-import com.alxsshv.security.dto.RoleDto;
-import com.alxsshv.security.dto.UserDto;
+import com.alxsshv.security.dto.*;
 import com.alxsshv.security.model.User;
 import com.alxsshv.security.service.interfaces.DefaultRoleService;
 import com.alxsshv.security.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -34,7 +29,7 @@ public class UserController {
 
     @GetMapping(value = "/username")
     public UserDto getCurrentUserName(Principal principal) {
-        User user = (User) userService.loadUserByUsername(principal.getName());
+        final User user = (User) userService.loadUserByUsername(principal.getName());
         return mapper.map(user, UserDto.class);
     }
 
@@ -43,30 +38,30 @@ public class UserController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String pageDir,
-            @RequestParam(value = "search", defaultValue = "") String searchString){
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.valueOf(pageDir.toUpperCase()), "surname"));
-        if(searchString.isEmpty() || searchString.equals("undefined")) {
+            @RequestParam(value = "search", defaultValue = "") String searchString) {
+        final Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.valueOf(pageDir.toUpperCase()), "surname"));
+        if (searchString.isEmpty() || "undefined".equals(searchString)) {
             return userService.findAll(pageable);
         }
-        return userService.findBySearchString(searchString,pageable);
+        return userService.findBySearchString(searchString, pageable);
     }
 
     @GetMapping("pages/wait")
-    public Page<UserDto>findWaitingCheckUsers(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
+    public Page<UserDto> findWaitingCheckUsers(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
-                                              @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String pageDir){
-        Pageable pageable = PageRequest.of(pageNum,pageSize,Sort.by(Sort.Direction.valueOf(pageDir.toUpperCase()),"surname"));
+                                              @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String pageDir) {
+        final Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.valueOf(pageDir.toUpperCase()), "surname"));
         return userService.findAllWaitingCheck(pageable);
     }
 
     @GetMapping("/search")
     public List<UserDto> searchUser(
-            @RequestParam(value = "search") String searchString){
+            @RequestParam(value = "search") String searchString) {
         return userService.findBySearchString(searchString);
     }
 
     @GetMapping("/wait/count")
-    public long findWaitingCheckUsersCount(){
+    public long findWaitingCheckUsersCount() {
         return userService.findWaitingCheckUsersCount();
     }
 
@@ -76,8 +71,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") long id){
-        UserDto dto = userService.findById(id);
+    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
+        final UserDto dto = userService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
@@ -87,34 +82,32 @@ public class UserController {
         userDto.setChecked(false);
         userDto.setEnabled(false);
         userService.create(userDto);
-        String okMessage = "Пользователь  " + userDto.getName() + " " + userDto.getSurname() + " успешно добавлен. " +
+        final String okMessage = "Пользователь  " + userDto.getName() + " " + userDto.getSurname() + " успешно добавлен. " +
                 "Вход в аккаунт будет доступен после проверки администратором. Повторите попытку входа через некоторое время";
         log.info(okMessage);
         return ResponseEntity.status(201).body(new ServiceMessage(okMessage));
     }
 
-    @PostMapping()
-    public ResponseEntity<?> addUser(@RequestBody UserDto userDto){
+    @PostMapping
+    public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
         userService.create(userDto);
-        String okMessage = "Пользователь " + userDto.getName() + " "
-                + userDto.getSurname() + " успешно добавлен";
+        final String okMessage = "Пользователь " + userDto.getName() + " " + userDto.getSurname() + " успешно добавлен";
         log.info(okMessage);
         return ResponseEntity.ok(new ServiceMessage(okMessage));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editUser(@RequestBody UserDto userDto){
+    public ResponseEntity<?> editUser(@RequestBody UserDto userDto) {
         userService.update(userDto);
-        String okMessage = "Сведения о пользователе " + userDto.getName() + " "
-                + userDto.getSurname() + " обновлены";
+        final String okMessage = "Сведения о пользователе " + userDto.getName() + " " + userDto.getSurname() + " обновлены";
         log.info(okMessage);
         return ResponseEntity.ok(new ServiceMessage(okMessage));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id){
+    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
         userService.delete(id);
-        String okMessage ="Запись о пользователе успешно удалена";
+        final String okMessage = "Запись о пользователе успешно удалена";
         log.info(okMessage);
         return ResponseEntity.ok(new ServiceMessage(okMessage));
     }

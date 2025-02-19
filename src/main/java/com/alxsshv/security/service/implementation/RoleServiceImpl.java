@@ -32,7 +32,8 @@ import java.util.Optional;
 public class RoleServiceImpl implements RoleService, DefaultRoleService {
     @Autowired
     private RoleRepository roleRepository;
-    ModelMapper mapper = new ModelMapper();
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public void create(@RoleNotExist @Valid Role role) {
@@ -42,9 +43,9 @@ public class RoleServiceImpl implements RoleService, DefaultRoleService {
     }
 
     @Override
-    public Role getRoleById(long id){
-        Optional<Role> roleOpt = roleRepository.findById(id);
-        if (roleOpt.isEmpty()){
+    public Role getRoleById(long id) {
+        final Optional<Role> roleOpt = roleRepository.findById(id);
+        if (roleOpt.isEmpty()) {
             throw new EntityNotFoundException("Роль не найдена");
         }
         return roleOpt.get();
@@ -66,9 +67,9 @@ public class RoleServiceImpl implements RoleService, DefaultRoleService {
 
     @Override
     public RoleDto findByName(String name) {
-        Optional<Role> roleOpt = roleRepository.findByName(name);
+        final Optional<Role> roleOpt = roleRepository.findByName(name);
         if (roleOpt.isEmpty()) {
-            String errorMessage = "Роль не найдена";
+            final String errorMessage = "Роль не найдена";
             log.error(errorMessage);
             throw new EntityNotFoundException(errorMessage);
         }
@@ -128,7 +129,7 @@ public class RoleServiceImpl implements RoleService, DefaultRoleService {
     public Role getDefaultRole() {
         final Optional<Role> roleOpt = roleRepository.findByDefaultRole(true);
         if (roleOpt.isEmpty()) {
-            String errorMessage = "Роль по умолчанию не найдена";
+            final String errorMessage = "Роль по умолчанию не найдена";
             log.error(errorMessage);
             throw new EntityNotFoundException(errorMessage);
         }
@@ -139,7 +140,7 @@ public class RoleServiceImpl implements RoleService, DefaultRoleService {
     public Role getRootRole() {
         final Optional<Role> roleOpt = roleRepository.findByRootRole(true);
         if (roleOpt.isEmpty()) {
-            String errorMessage = "Роль полным доступом не найдена";
+            final String errorMessage = "Роль полным доступом не найдена";
             log.error(errorMessage);
             throw new EntityNotFoundException(errorMessage);
         }

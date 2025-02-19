@@ -5,8 +5,8 @@ import com.alxsshv.journal.dto.ProtocolDto;
 import com.alxsshv.journal.model.Protocol;
 import com.alxsshv.journal.service.interfaces.DigitalSignatureService;
 import com.alxsshv.journal.service.interfaces.ProtocolService;
-import com.alxsshv.journal.utils.PDFEditor;
 import com.alxsshv.journal.utils.PathResolver;
+import com.alxsshv.journal.utils.PdfEditor;
 import com.alxsshv.security.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
+import javax.naming.OperationNotSupportedException;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +24,7 @@ import java.io.IOException;
 @Setter
 public class SignatureServiceImpl implements DigitalSignatureService {
     @Autowired
-    private PDFEditor pdfEditor;
+    private PdfEditor pdfEditor;
     @Autowired
     private PathsConfig pathsConfig;
     @Autowired
@@ -34,10 +34,9 @@ public class SignatureServiceImpl implements DigitalSignatureService {
     @Autowired
     private ModelMapper mapper;
 
-
     public void setUserStamp(long id, User currentUser) throws OperationNotSupportedException, IOException {
         final Protocol protocol = protocolService.getProtocolById(id);
-        if (protocol.isSigned()){
+        if (protocol.isSigned()) {
             throw new OperationNotSupportedException("Файл уже имеет подпись поверителя. Повторное подписание не возможно");
         }
         if (!protocol.getVerificationEmployee().equals(currentUser)) {

@@ -1,6 +1,5 @@
 package com.alxsshv.security.service.implementation;
 
-
 import com.alxsshv.security.dto.RoleDto;
 import com.alxsshv.security.dto.UserDto;
 import com.alxsshv.security.model.Role;
@@ -18,11 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.*;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +33,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Validated
-public class UserServiceImpl implements UserService, UserDetailsService{
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -49,12 +45,11 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()){
+        if (userOpt.isEmpty()) {
             throw new UsernameNotFoundException("Пользователь с таким логином не найден");
         }
         return userOpt.get();
     }
-
 
     @Override
     public void create(@UserNotExist @Valid UserDto userDto) {
@@ -65,8 +60,8 @@ public class UserServiceImpl implements UserService, UserDetailsService{
         userRepository.save(user);
     }
 
-    private Set<Role> getUserRoles(UserDto userDto){
-        Set<Role> userRoles = new HashSet<>();
+    private Set<Role> getUserRoles(UserDto userDto) {
+        final Set<Role> userRoles = new HashSet<>();
         for (RoleDto roleDto : userDto.getRoles()) {
             final Role role = roleService.getRoleById(roleDto.getId());
             userRoles.add(role);
@@ -82,7 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
     @Override
     public User getUserById(long id) {
-        Optional<User> userOpt = userRepository.findById(id);
+        final Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
             throw new EntityNotFoundException("Пользователь с id " + id + " не найден");
         }
@@ -98,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
 
     @Override
     public List<UserDto> findBySearchString(@NotBlank(message = "Поле для поиска не может быть пустым") String searchString) {
-        return userRepository.findBySurnameContainingOrNameContaining(searchString,searchString).stream()
+        return userRepository.findBySurnameContainingOrNameContaining(searchString, searchString).stream()
                 .map(user -> mapper.map(user, UserDto.class)).toList();
     }
 
@@ -113,7 +108,7 @@ public class UserServiceImpl implements UserService, UserDetailsService{
     }
 
     @Override
-    public long findWaitingCheckUsersCount(){
+    public long findWaitingCheckUsersCount() {
         return userRepository.countByChecked(false);
     }
 

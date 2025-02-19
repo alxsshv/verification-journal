@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.naming.OperationNotSupportedException;
 import java.io.IOException;
+import javax.naming.OperationNotSupportedException;
 
 @ControllerAdvice
 @Slf4j
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ServiceMessage> catchIOException(IOException ex) {
+    public ResponseEntity<ServiceMessage> catchIoException(IOException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(500).body(new ServiceMessage("Ошибка доступа к хранилищу файлов"));
     }

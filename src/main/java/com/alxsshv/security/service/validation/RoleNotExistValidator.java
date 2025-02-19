@@ -16,7 +16,7 @@ public class RoleNotExistValidator implements ConstraintValidator<RoleNotExist, 
 
     @Override
     public boolean isValid(Role role, ConstraintValidatorContext context) {
-        Optional<Role> roleOpt = roleRepository.findByName(role.getPseudonym());
-        return  roleOpt.isEmpty();
+        final Optional<Role> roleOpt = roleRepository.findByName(role.getPseudonym());
+        return roleOpt.isEmpty();
     }
 }

@@ -6,7 +6,7 @@ import com.alxsshv.security.dto.UserDto;
 
 public class ProtocolFileInfoToProtocolDtoMapper {
 
-    public static ProtocolDto mapToProtocolDto(ProtocolFileInfo protocolFileInfo, UserDto userDto){
+    public static ProtocolDto mapToProtocolDto(ProtocolFileInfo protocolFileInfo, UserDto userDto) {
         final ProtocolDto protocolDto = new ProtocolDto();
         protocolDto.setVerificationEmployee(userDto);
         protocolDto.setNumber(protocolFileInfo.getNumber());

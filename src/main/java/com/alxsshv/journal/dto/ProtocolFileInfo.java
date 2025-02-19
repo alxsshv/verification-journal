@@ -18,7 +18,6 @@ public class ProtocolFileInfo {
     private String miModification;
     private String miSerialNum;
 
-
     @Override
     public String toString() {
         return "ProtocolFileInfo{" +

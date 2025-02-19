@@ -57,12 +57,11 @@ public class User implements UserDetails {
         return enabled;
     }
 
-
     public boolean isChecked() {
         return checked;
     }
 
-    public void updateFrom(User user){
+    public void updateFrom(User user) {
         if (user.getPassword() != null) {
             this.password = user.getPassword();
         }
