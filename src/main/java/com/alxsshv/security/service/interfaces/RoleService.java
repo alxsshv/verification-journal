@@ -12,13 +12,21 @@ import java.util.List;
 
 @Service
 public interface RoleService {
+
     void create(@RoleNotExist @Valid Role role);
+
     RoleDto findById(long id);
+
     RoleDto findByName(String name);
+
     Role getRoleById(long id);
+
     Role getRoleByName(String name);
+
     Page<RoleDto> findAll(Pageable pageable);
+
     List<RoleDto> findAll();
+
     void delete(long id);
 
 }

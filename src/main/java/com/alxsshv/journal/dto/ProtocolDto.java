@@ -1,6 +1,5 @@
 package com.alxsshv.journal.dto;
 
-
 import com.alxsshv.security.dto.UserDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

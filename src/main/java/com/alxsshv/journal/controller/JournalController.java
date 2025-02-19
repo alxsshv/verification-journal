@@ -33,7 +33,7 @@ public class JournalController {
 
     @GetMapping
     public List<JournalDto> findAllJournals() {
-       return journalService.findAll();
+        return journalService.findAll();
     }
 
     @GetMapping("/pages")
@@ -42,8 +42,8 @@ public class JournalController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR) String dir,
             @RequestParam(value = "search", defaultValue = "") String searchString) {
-        Sort.Direction direction =  Sort.Direction.valueOf(dir.toUpperCase());
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(direction, "number"));
+        final Sort.Direction direction = Sort.Direction.valueOf(dir.toUpperCase());
+        final Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(direction, "number"));
         if (searchString.isEmpty()) {
             return journalService.findAll(pageable);
         }
@@ -52,20 +52,20 @@ public class JournalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<JournalDto> getJournalById(@PathVariable("id") long id) {
-        JournalDto journalDto = journalService.findById(id);
+        final JournalDto journalDto = journalService.findById(id);
         return ResponseEntity.ok(journalDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ServiceMessage> updateJournal(@PathVariable("id") long id,
-                                                        @RequestBody JournalDto journalDto)  {
-        if (journalDto.getId() != id){
-            String errorMessage = "Идентифкатор обновляемого журнала отличается от идентификатора в даных для обновления";
+                                                        @RequestBody JournalDto journalDto) {
+        if (journalDto.getId() != id) {
+            final String errorMessage = "Идентифкатор обновляемого журнала отличается от идентификатора в даных для обновления";
             log.error("{} id журнала={}, id для боновления={}", errorMessage, id, journalDto.getId());
             return ResponseEntity.status(400).body(new ServiceMessage(errorMessage));
         }
         journalService.update(journalDto);
-        String okMessage = "Данные о журнале изменены";
+        final String okMessage = "Данные о журнале изменены";
         return ResponseEntity.ok(new ServiceMessage(okMessage));
     }
 }

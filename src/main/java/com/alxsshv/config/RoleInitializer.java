@@ -1,7 +1,7 @@
 package com.alxsshv.config;
 
-import com.alxsshv.security.model.SystemSecurityRoles;
 import com.alxsshv.security.model.Role;
+import com.alxsshv.security.model.SystemSecurityRoles;
 import com.alxsshv.security.service.interfaces.DefaultRoleService;
 import com.alxsshv.security.service.interfaces.RoleService;
 import com.alxsshv.security.service.interfaces.UserService;
@@ -30,41 +30,39 @@ public class RoleInitializer {
         generateRole(SystemSecurityRoles.VERIFICATION_EMPLOYEE);
     }
 
-    public void generateRole(SystemSecurityRoles securityRole){
-        Role role = new Role();
-        try{
-            role.setName("ROLE_"+securityRole.getName());
+    private void generateRole(SystemSecurityRoles securityRole) {
+        final Role role = new Role();
+        try {
+            role.setName("ROLE_" + securityRole.getName());
             role.setPseudonym(securityRole.getPseudonym());
             roleService.create(role);
             log.info("Роль {} добавлена в систему", securityRole.getPseudonym());
-        } catch (IllegalArgumentException | ConstraintViolationException ex){
+        } catch (IllegalArgumentException | ConstraintViolationException ex) {
             log.warn(ex.getMessage());
         }
     }
 
     private void generateDefaultRole(SystemSecurityRoles securityRole) {
-        Role role = new Role();
-        try{
-            role.setName("ROLE_"+securityRole.getName());
+        final Role role = new Role();
+        try {
+            role.setName("ROLE_" + securityRole.getName());
             role.setPseudonym(securityRole.getPseudonym());
             defaultRoleService.createDefault(role);
             log.info("Роль {} добавлена в систему", securityRole.getPseudonym());
-        } catch (IllegalArgumentException | ConstraintViolationException ex){
+        } catch (IllegalArgumentException | ConstraintViolationException ex) {
             log.warn(ex.getMessage());
         }
     }
 
     private void generateRootRole(SystemSecurityRoles securityRole) {
-        Role role = new Role();
-        try{
-            role.setName("ROLE_"+securityRole.getName());
+        final Role role = new Role();
+        try {
+            role.setName("ROLE_" + securityRole.getName());
             role.setPseudonym(securityRole.getPseudonym());
             defaultRoleService.createRoot(role);
             log.info("Роль {} добавлена в систему", securityRole.getPseudonym());
-        } catch (IllegalArgumentException | ConstraintViolationException ex){
+        } catch (IllegalArgumentException | ConstraintViolationException ex) {
             log.warn(ex.getMessage());
         }
     }
-
-
 }

@@ -52,46 +52,45 @@ public class WebController {
     }
 
     @GetMapping("/journal/add/{id}")
-    public String getProtocolAddingForm(@PathVariable("id") long id, Model model){
-        model.addAttribute("id",id);
+    public String getProtocolAddingForm(@PathVariable("id") long id, Model model) {
+        model.addAttribute("id", id);
         return "journal/protocol/form";
     }
 
     @GetMapping("/journal/protocol/wait")
-    public String getProtocolSigningForm(){
+    public String getProtocolSigningForm() {
         return "journal/protocol/wait_sign";
     }
 
     @GetMapping("/user")
-    public String getUsersListView(){
+    public String getUsersListView() {
         return "security/users/list";
     }
 
     @GetMapping("/user/{id}")
-    public String getUserView(@RequestParam("id") String id, Model model){
-        model.addAttribute("id",id);
+    public String getUserView(@RequestParam("id") String id, Model model) {
+        model.addAttribute("id", id);
         return "security/users/card";
     }
 
     @GetMapping("/user/form")
-    public String getUserForm(){
+    public String getUserForm() {
         return "security/users/form";
     }
 
     @GetMapping("/user/form/{id}")
-    public String getEditUserView(@RequestParam("id") String id, Model model){
-        model.addAttribute("id",id);
+    public String getEditUserView(@RequestParam("id") String id, Model model) {
+        model.addAttribute("id", id);
         return "security/users/edit";
     }
 
     @GetMapping("/user/wait")
-    public String getWaitingCheckUsersList(){
+    public String getWaitingCheckUsersList() {
         return "security/users/wait_list";
     }
 
-
     @GetMapping("/settings")
-    public String getEditUserView(){
+    public String getEditUserView() {
         return "security/settings/system_admin";
     }
 

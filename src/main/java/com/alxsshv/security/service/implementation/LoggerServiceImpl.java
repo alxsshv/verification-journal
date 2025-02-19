@@ -28,7 +28,7 @@ public class LoggerServiceImpl implements LoggerService {
     @Override
     public ResponseEntity<?> getApplicationLog() throws IOException {
         try {
-            ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+            final ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                     .filename("logs.txt", StandardCharsets.UTF_8).build();
             final HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.TEXT_PLAIN);
@@ -36,15 +36,10 @@ public class LoggerServiceImpl implements LoggerService {
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(new ByteArrayResource(Files.readAllBytes(Path.of(logFileName))));
-        } catch (IOException ex){
+        } catch (IOException ex) {
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Location", "/file_not_found");
-            return new ResponseEntity<>(null,headers, HttpStatus.FOUND);
+            return new ResponseEntity<>(null, headers, HttpStatus.FOUND);
         }
-
-
-
-
-
     }
 }

@@ -2,7 +2,6 @@ package com.alxsshv.config;
 
 import lombok.Getter;
 
-
 @Getter
 public class AppConstants {
     public static final String DEFAULT_PAGE_NUMBER = "1";

@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-
 @Service
 @AllArgsConstructor
 public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
@@ -39,20 +38,19 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
         final UserDto userDto = userService.findById(protocolFileInfo.getVerificationEmployeeId());
         final ProtocolDto protocolDto = ProtocolFileInfoToProtocolDtoMapper
                 .mapToProtocolDto(protocolFileInfo, userDto);
-        protocolService.upload(file,protocolDto, journal);
+        protocolService.upload(file, protocolDto, journal);
     }
-
 
     @Override
     public Page<ProtocolDto> findProtocolsByJournal(long journalId, Pageable pageable) {
-        Journal journal = journalService.getById(journalId);
+        final Journal journal = journalService.getById(journalId);
         return protocolService.findProtocolsByJournal(journal, pageable);
     }
 
     @Override
     public Page<ProtocolDto> findJournalProtocolsBySearchString(long journalId, String searchString, Pageable pageable) {
-        Journal journal = journalService.getById(journalId);
-        return protocolService.findProtocolByJournalAndSearchString(journal,searchString, pageable);
+        final Journal journal = journalService.getById(journalId);
+        return protocolService.findProtocolByJournalAndSearchString(journal, searchString, pageable);
     }
 
     @Override
@@ -80,9 +78,8 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
         return protocolService.getProtocolById(id);
     }
 
-
     @Override
-    public ResponseEntity<?> getProtocolFile(long id){
+    public ResponseEntity<?> getProtocolFile(long id) {
         return protocolService.getProtocolFileById(id);
     }
 
@@ -92,8 +89,8 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     }
 
     @Override
-    public void deleteAll(long journal_id) {
-        Journal journal = journalService.getById(journal_id);
+    public void deleteAll(long journalId) {
+        final Journal journal = journalService.getById(journalId);
         protocolService.deleteAll(journal);
     }
 

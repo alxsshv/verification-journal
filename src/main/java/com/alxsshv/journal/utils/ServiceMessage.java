@@ -1,6 +1,5 @@
 package com.alxsshv.journal.utils;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
