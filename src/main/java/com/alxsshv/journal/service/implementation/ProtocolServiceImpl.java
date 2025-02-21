@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -44,6 +45,7 @@ public class ProtocolServiceImpl implements ProtocolService {
     private ProtocolRepository protocolRepository;
     private ModelMapper mapper = new ModelMapper();
 
+    @Transactional
     @Override
     public void upload(MultipartFile file, ProtocolDto protocolDto, Journal journal) throws IOException {
         final String filename = file.getOriginalFilename();
@@ -140,6 +142,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         return pathsConfig.getOriginProtocolsPath() + "/" + protocol.getStorageFileName();
     }
 
+    @Transactional
     @Override
     public void update(ProtocolDto protocolDto) {
         final Protocol protocol = getProtocolById(protocolDto.getId());

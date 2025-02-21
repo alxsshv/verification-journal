@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import javax.naming.OperationNotSupportedException;
@@ -34,6 +35,7 @@ public class SignatureServiceImpl implements DigitalSignatureService {
     @Autowired
     private ModelMapper mapper;
 
+    @Transactional
     public void setUserStamp(long id, User currentUser) throws OperationNotSupportedException, IOException {
         final Protocol protocol = protocolService.getProtocolById(id);
         if (protocol.isSigned()) {
