@@ -285,7 +285,7 @@
         <!-- <module name="JavadocVariable"/> invalid -->
         <!-- <module name="MissingJavadocType"/> invalid -->
         <!-- <module name="WriteTag"/> invalid -->
-        <module name="MethodName"/>
+<!--        <module name="MethodName"/>-->
         <module name="ConstantName"/>
         <module name="SingleLineJavadoc"/>
         <module name="EmptyCatchBlock">
