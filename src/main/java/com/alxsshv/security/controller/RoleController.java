@@ -18,7 +18,7 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public List<RoleDto> getRoleWithoutPageableList() {
+    public List<RoleDto> getRoleList() {
         return roleService.findAll();
     }
 
