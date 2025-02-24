@@ -2,6 +2,7 @@ package com.alxsshv.journal.exceptions;
 
 import com.alxsshv.journal.utils.ServiceMessage;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,5 +37,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ServiceMessage> catchOperationNotSupportedException(OperationNotSupportedException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(404).body(new ServiceMessage(ex.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ServiceMessage> catchConstrainViolationExceptionException(ConstraintViolationException ex) {
+        log.error(ex.getMessage());
+        final String errorMessage = ex.getMessage().split(":")[1];
+        return ResponseEntity.status(400).body(new ServiceMessage(errorMessage));
     }
 }

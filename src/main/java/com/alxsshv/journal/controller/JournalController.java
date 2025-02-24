@@ -61,7 +61,7 @@ public class JournalController {
                                                         @RequestBody JournalDto journalDto) {
         if (journalDto.getId() != id) {
             final String errorMessage = "Идентифкатор обновляемого журнала отличается от идентификатора в даных для обновления";
-            log.error("{} id журнала={}, id для боновления={}", errorMessage, id, journalDto.getId());
+            log.error("{} id журнала={}, id для обновления={}", errorMessage, id, journalDto.getId());
             return ResponseEntity.status(400).body(new ServiceMessage(errorMessage));
         }
         journalService.update(journalDto);

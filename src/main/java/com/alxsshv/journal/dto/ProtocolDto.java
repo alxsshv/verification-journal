@@ -1,7 +1,7 @@
 package com.alxsshv.journal.dto;
 
 import com.alxsshv.security.dto.UserDto;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProtocolDto {
     private long id;
-    @NotNull(message = "протокол не может быть пустым")
+    @NotEmpty(message = "протокол не может быть пустым")
     private String number;
     private String storageFileName;
     private String originalFilename;
