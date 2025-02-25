@@ -2,6 +2,8 @@ package com.alxsshv.security.service.implementation;
 
 import com.alxsshv.security.dto.RoleDto;
 import com.alxsshv.security.dto.UserDto;
+import com.alxsshv.security.dto.UserNoPassDto;
+import com.alxsshv.security.exception.UserOperationException;
 import com.alxsshv.security.model.Role;
 import com.alxsshv.security.model.User;
 import com.alxsshv.security.repository.UserRepository;
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -32,6 +35,7 @@ import java.util.Set;
 @Setter
 @RequiredArgsConstructor
 @Service
+@Slf4j
 @Validated
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
@@ -61,6 +65,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private Set<Role> getUserRoles(UserDto userDto) {
+        if (userDto.getRoles() == null || userDto.getRoles().isEmpty()) {
+            final String errorMessage = "Ошибка создания пользователя. Необходимо указать хотябы одну роль (уровень доступа)";
+            log.error(errorMessage);
+            throw new UserOperationException(errorMessage);
+        }
         final Set<Role> userRoles = new HashSet<>();
         for (RoleDto roleDto : userDto.getRoles()) {
             final Role role = roleService.getRoleById(roleDto.getId());
@@ -70,9 +79,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDto findById(long id) {
+    public UserNoPassDto findById(long id) {
         final User user = getUserById(id);
-        return mapper.map(user, UserDto.class);
+        return mapper.map(user, UserNoPassDto.class);
     }
 
     @Override
@@ -85,26 +94,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Page<UserDto> findBySearchString(
+    public Page<UserNoPassDto> findBySearchString(
             @NotBlank(message = "Поле для поиска не может быть пустым") String searchString, Pageable pageable) {
-        return userRepository.findBySurnameContainingOrUsernameContaining(searchString, searchString, pageable)
-                .map(user -> mapper.map(user, UserDto.class));
+        return userRepository.findBySurnameIgnoreCaseContainingOrUsernameIgnoreCaseContaining(searchString, searchString, pageable)
+                .map(user -> mapper.map(user, UserNoPassDto.class));
     }
 
     @Override
-    public List<UserDto> findBySearchString(@NotBlank(message = "Поле для поиска не может быть пустым") String searchString) {
-        return userRepository.findBySurnameContainingOrNameContaining(searchString, searchString).stream()
-                .map(user -> mapper.map(user, UserDto.class)).toList();
+    public List<UserNoPassDto> findBySearchString(@NotBlank(message = "Поле для поиска не может быть пустым") String searchString) {
+        return userRepository.findBySurnameIgnoreCaseContainingOrNameIgnoreCaseContaining(searchString, searchString).stream()
+                .map(user -> mapper.map(user, UserNoPassDto.class)).toList();
     }
 
     @Override
-    public Page<UserDto> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable).map(user -> mapper.map(user, UserDto.class));
+    public Page<UserNoPassDto> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(user -> mapper.map(user, UserNoPassDto.class));
     }
 
     @Override
-    public Page<UserDto> findAllWaitingCheck(Pageable pageable) {
-        return userRepository.findByChecked(false, pageable).map(user -> mapper.map(user, UserDto.class));
+    public Page<UserNoPassDto> findAllWaitingCheck(Pageable pageable) {
+        return userRepository.findByChecked(false, pageable).map(user -> mapper.map(user, UserNoPassDto.class));
     }
 
     @Override
@@ -113,8 +122,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(user -> mapper.map(user, UserDto.class)).toList();
+    public List<UserNoPassDto> findAll() {
+        return userRepository.findAll().stream().map(user -> mapper.map(user, UserNoPassDto.class)).toList();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                                .requestMatchers("/js/**", "/css/**", "/login", "/registration", "/users/registration").permitAll()
                                 .requestMatchers("/organization/**").hasAnyRole(SystemSecurityRoles.USER.getName())
                                 .requestMatchers("/journal/**", "/users/username", "/users/search").hasAnyRole(SystemSecurityRoles.VERIFICATION_EMPLOYEE.getName())
-                                .requestMatchers("/settings/**", "/logs/**", "/journal/**", "/users/username", "/users/**").hasAnyRole(SystemSecurityRoles.SYSTEM_ADMIN.getName())
+                                .requestMatchers("/settings/**", "/logs/**", "/journal/**", "/users/**", "/users/username", "/users/search").hasAnyRole(SystemSecurityRoles.SYSTEM_ADMIN.getName())
                                 .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .exceptionHandling(form -> form.accessDeniedPage("/access_denied"))

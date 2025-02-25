@@ -8,7 +8,7 @@ import com.alxsshv.journal.model.Protocol;
 import com.alxsshv.journal.service.interfaces.JournalService;
 import com.alxsshv.journal.service.interfaces.ProtocolService;
 import com.alxsshv.journal.service.interfaces.ProtocolServiceFacade;
-import com.alxsshv.security.dto.UserDto;
+import com.alxsshv.security.dto.UserNoPassDto;
 import com.alxsshv.security.model.User;
 import com.alxsshv.security.service.interfaces.UserService;
 import lombok.AllArgsConstructor;
@@ -35,9 +35,9 @@ public class ProtocolServiceFacadeImpl implements ProtocolServiceFacade {
     @Override
     public void upload(MultipartFile file, ProtocolFileInfo protocolFileInfo) throws IOException {
         final Journal journal = journalService.getById(protocolFileInfo.getJournalId());
-        final UserDto userDto = userService.findById(protocolFileInfo.getVerificationEmployeeId());
+        final UserNoPassDto UserNoPassDto = userService.findById(protocolFileInfo.getVerificationEmployeeId());
         final ProtocolDto protocolDto = ProtocolFileInfoToProtocolDtoMapper
-                .mapToProtocolDto(protocolFileInfo, userDto);
+                .mapToProtocolDto(protocolFileInfo, UserNoPassDto);
         protocolService.upload(file, protocolDto, journal);
     }
 

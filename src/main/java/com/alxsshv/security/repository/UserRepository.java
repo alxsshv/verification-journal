@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findBySurname(String surname);
 
-    List<User> findBySurnameContainingOrNameContaining(String surname, String name);
+    List<User> findBySurnameIgnoreCaseContainingOrNameIgnoreCaseContaining(String surname, String name);
 
-    Page<User> findBySurnameContainingOrUsernameContaining(String surname, String username, Pageable pageable);
+    Page<User> findBySurnameIgnoreCaseContainingOrUsernameIgnoreCaseContaining(String surname, String username, Pageable pageable);
 
     Page<User> findByChecked(boolean checked, Pageable pageable);
 

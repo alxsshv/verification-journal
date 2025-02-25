@@ -2,11 +2,11 @@ package com.alxsshv.journal.dto.mapper;
 
 import com.alxsshv.journal.dto.ProtocolDto;
 import com.alxsshv.journal.dto.ProtocolFileInfo;
-import com.alxsshv.security.dto.UserDto;
+import com.alxsshv.security.dto.UserNoPassDto;
 
 public class ProtocolFileInfoToProtocolDtoMapper {
 
-    public static ProtocolDto mapToProtocolDto(ProtocolFileInfo protocolFileInfo, UserDto userDto) {
+    public static ProtocolDto mapToProtocolDto(ProtocolFileInfo protocolFileInfo, UserNoPassDto userDto) {
         final ProtocolDto protocolDto = new ProtocolDto();
         protocolDto.setVerificationEmployee(userDto);
         protocolDto.setNumber(protocolFileInfo.getNumber());
