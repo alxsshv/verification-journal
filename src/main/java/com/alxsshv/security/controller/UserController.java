@@ -6,6 +6,7 @@ import com.alxsshv.security.dto.*;
 import com.alxsshv.security.model.User;
 import com.alxsshv.security.service.interfaces.DefaultRoleService;
 import com.alxsshv.security.service.interfaces.UserService;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,13 @@ public class UserController {
     private ModelMapper mapper;
 
     @GetMapping(value = "/username")
-    public UserDto getCurrentUserName(Principal principal) {
+    public UserNoPassDto getCurrentUserName(Principal principal) {
         final User user = (User) userService.loadUserByUsername(principal.getName());
-        return mapper.map(user, UserDto.class);
+        return mapper.map(user, UserNoPassDto.class);
     }
 
     @GetMapping("/pages")
-    public Page<UserDto> getUsersPageableList(
+    public Page<UserNoPassDto> getUsersPageableList(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String pageDir,
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("pages/wait")
-    public Page<UserDto> findWaitingCheckUsers(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
+    public Page<UserNoPassDto> findWaitingCheckUsers(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNum,
                                               @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                               @RequestParam(value = "dir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String pageDir) {
         final Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.valueOf(pageDir.toUpperCase()), "surname"));
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<UserDto> searchUser(
+    public List<UserNoPassDto> searchUser(
             @RequestParam(value = "search") String searchString) {
         return userService.findBySearchString(searchString);
     }
@@ -66,13 +67,13 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getUserWithoutPageableList() {
+    public List<UserNoPassDto> getUserWithoutPageableList() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") long id) {
-        final UserDto dto = userService.findById(id);
+    public ResponseEntity<?> getUser(@PathVariable("id") @Min(value = 1, message = "Неверный формат id") long id) {
+        final UserNoPassDto dto = userService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
@@ -93,7 +94,7 @@ public class UserController {
         userService.create(userDto);
         final String okMessage = "Пользователь " + userDto.getName() + " " + userDto.getSurname() + " успешно добавлен";
         log.info(okMessage);
-        return ResponseEntity.ok(new ServiceMessage(okMessage));
+        return ResponseEntity.status(201).body(new ServiceMessage(okMessage));
     }
 
     @PutMapping("/{id}")
@@ -105,7 +106,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("id") @Min(value = 1, message = "Неверный формат id") long id) {
         userService.delete(id);
         final String okMessage = "Запись о пользователе успешно удалена";
         log.info(okMessage);

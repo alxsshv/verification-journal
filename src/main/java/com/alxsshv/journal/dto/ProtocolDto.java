@@ -1,6 +1,6 @@
 package com.alxsshv.journal.dto;
 
-import com.alxsshv.security.dto.UserDto;
+import com.alxsshv.security.dto.UserNoPassDto;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class ProtocolDto {
     private String extension;
     private String verificationDate;
     private long journalId;
-    private UserDto verificationEmployee;
+    private UserNoPassDto verificationEmployee;
     private boolean awaitingSigning;
     private boolean signed;
     private String miModification;
