@@ -1,5 +1,6 @@
-package com.alxsshv.journal.exceptions;
+package com.alxsshv.config;
 
+import com.alxsshv.journal.exceptions.ProtocolStorageException;
 import com.alxsshv.journal.utils.ServiceMessage;
 import com.alxsshv.security.exception.UserOperationException;
 import jakarta.persistence.EntityNotFoundException;

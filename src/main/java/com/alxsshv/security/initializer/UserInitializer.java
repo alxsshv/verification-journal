@@ -1,4 +1,4 @@
-package com.alxsshv.config;
+package com.alxsshv.security.initializer;
 
 import com.alxsshv.security.dto.RoleDto;
 import com.alxsshv.security.dto.UserDto;
