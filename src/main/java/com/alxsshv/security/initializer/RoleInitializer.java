@@ -1,4 +1,4 @@
-package com.alxsshv.config;
+package com.alxsshv.security.initializer;
 
 import com.alxsshv.security.model.Role;
 import com.alxsshv.security.model.SystemSecurityRoles;
