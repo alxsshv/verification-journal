@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'checkstyle'
+    id 'jacoco'
 }
 
 group = 'com.alxsshv'
@@ -45,6 +46,7 @@ configurations.implementation {
 test {
     useJUnitPlatform()
     dependsOn(checkstyleMain, checkstyleTest)
+    finalizedBy jacocoTestReport
 }
 
 application {
@@ -66,3 +68,34 @@ checkstyleMain {
 checkstyleTest {
     source = 'src/test/java/'
 }
+
+jacocoTestReport {
+    dependsOn test
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir('jacocoReportDir')
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+
+
+
