@@ -70,7 +70,7 @@ public class JournalControllerIntegrationTest {
         journalRepository.deleteAll();
     }
 
-    @WithMockUser("Root")
+    @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
     @Test
     @DisplayName("Test createJournal when create new journal with All fields then get 201")
     public void testCreateJournal_whenCreateNewJournalWithAllFields_thenGet201() throws Exception {
@@ -87,7 +87,7 @@ public class JournalControllerIntegrationTest {
         Assertions.assertEquals(201, response.getStatus());
     }
 
-    @WithMockUser("Root")
+    @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
     @Test
     @DisplayName("Test createJournal when create new journal with only number field then get 201")
     public void testCreateJournal_whenCreateNewJournalWithOnlyNumberField_thenGet201() throws Exception {
@@ -102,7 +102,7 @@ public class JournalControllerIntegrationTest {
         Assertions.assertEquals(201, response.getStatus());
     }
 
-    @WithMockUser("Root")
+    @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
     @Test
     @DisplayName("Test createJournal when create new journal with empty number field then throw exception")
     public void testCreateJournal_whenCreateNewJournalWithEmptyNumberField_thenThrowException() throws Exception {
@@ -118,7 +118,7 @@ public class JournalControllerIntegrationTest {
         Assertions.assertEquals(400, response.getStatus());
     }
 
-    @WithMockUser("Root")
+    @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
     @Test
     @DisplayName("Test findAllJournals when get all journals then get 200 and not empty content list")
     public void testFindAllJournals_whenGetAllJournals_ThenGet200() throws Exception {
