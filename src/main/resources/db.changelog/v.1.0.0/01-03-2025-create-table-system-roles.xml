@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="01-03-2025-create-table-roles" author="shvariov.a">
+        <createTable tableName="system_roles" remarks="Роли пользователей">
+            <column name="id" type="int8" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="Название роли">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="pseudonym" type="varchar(255)" remarks="Наименование роли для фронтэнд">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="default_role" type="bool" defaultValue="false" remarks="Роль по умолчанию для новых пользователей">
+                <constraints nullable="false"/>
+            </column>
+            <column name="root_role" type="bool" defaultValue="false" remarks="Роль для администратора">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

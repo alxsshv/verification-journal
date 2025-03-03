@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="01-03-2025-create-table-system-users-roles" author="shvariov.a">
+        <createTable tableName="system_users_roles">
+            <column name="users_id" type="int8">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="system_users_roles_pkey" />
+            </column>
+            <column name="roles_id" type="int8">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="system_users_roles_pkey"/>
+            </column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="system_users_roles" baseColumnNames="roles_id"
+                                 constraintName="system_users_roles_roles_id_system_roles_id"
+                                 referencedTableName="system_roles" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="system_users_roles" baseColumnNames="users_id"
+                                 constraintName="system_users_roles_users_id_system_users_id"
+                                 referencedTableName="system_users" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

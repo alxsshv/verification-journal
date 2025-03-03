@@ -6,6 +6,7 @@ import com.alxsshv.journal.repository.ProtocolRepository;
 import com.alxsshv.security.dto.RoleDto;
 import com.alxsshv.security.dto.UserDto;
 import com.alxsshv.security.dto.UserNoPassDto;
+import com.alxsshv.security.initializer.RoleInitializer;
 import com.alxsshv.security.initializer.UserInitializer;
 import com.alxsshv.security.repository.RoleRepository;
 import com.alxsshv.security.repository.UserRepository;
@@ -20,10 +21,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Set;
 
@@ -31,6 +35,8 @@ import java.util.Set;
 public class SecurityFilterChainIntegrationTest {
     @Autowired
     private UserInitializer userInitializer;
+    @Autowired
+    private RoleInitializer roleInitializer;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -48,6 +54,24 @@ public class SecurityFilterChainIntegrationTest {
     @Autowired
     private WebApplicationContext context;
     private MockMvc mvc;
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:14");
+
+    @DynamicPropertySource
+    public static void configure(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES::getUsername);
+        registry.add("spring.datasource.password", POSTGRES::getPassword);
+    }
+
+    @BeforeAll
+    public static void beforeAll() {
+        POSTGRES.start();
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        POSTGRES.stop();
+    }
 
     @BeforeEach
     public void setMockMvc() {
@@ -55,6 +79,7 @@ public class SecurityFilterChainIntegrationTest {
                 .webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        roleInitializer.initialize();
         userInitializer.initialize();
     }
 
