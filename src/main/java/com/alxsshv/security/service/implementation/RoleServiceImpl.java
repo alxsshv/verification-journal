@@ -9,8 +9,8 @@ import com.alxsshv.security.service.validation.RoleNotExist;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,7 +26,7 @@ import java.util.Optional;
 @Slf4j
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
 @Service
 public class RoleServiceImpl implements RoleService, DefaultRoleService {

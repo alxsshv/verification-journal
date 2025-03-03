@@ -104,6 +104,24 @@ public class JournalControllerIntegrationTest {
 
     @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
     @Test
+    @DisplayName("Test createJournal when journal already exist field then get 400")
+    public void testCreateJournal_whenJournalAlreadyExist_thenGet400() throws Exception {
+        final JournalDto journalDto = new JournalDto();
+        journalDto.setNumber("1");
+        journalDto.setTitle("journal");
+        journalDto.setDescription("description");
+        final String journalString = objectMapper.writeValueAsString(journalDto);
+        final MockHttpServletResponse response = mvc.perform(MockMvcRequestBuilders
+                        .request(HttpMethod.POST, "/journals")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(journalString))
+                .andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        Assertions.assertEquals(400, response.getStatus());
+    }
+
+    @WithMockUser(value = "Root", roles = "VERIFICATION_EMPLOYEE")
+    @Test
     @DisplayName("Test createJournal when create new journal with empty number field then throw exception")
     public void testCreateJournal_whenCreateNewJournalWithEmptyNumberField_thenThrowException() throws Exception {
         final JournalDto journalDto = new JournalDto();

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+    <changeSet id="01-03-2025-create-table-system-users" author="shvariov.a">
+        <createTable tableName="system_users">
+            <column name="id" type="int8" autoIncrement="true" remarks="Идентификатор">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar" remarks="Логин">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar" remarks="Пароль">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar" remarks="Имя пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar" remarks="Фамилия">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patronymic" type="varchar" remarks="Отчество">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar" remarks="Номер телефона"/>
+            <column name="checked" type="bool" defaultValue="false"
+                    remarks="Аккаунт проверен администратором">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="bool" defaultValue="false" remarks="Аккаунт активен">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="02-03-2025-create-table-protocol" author="shvariov.a">
+    <createTable tableName="verification_protocols">
+        <column name="id" type="bigint" autoIncrement="true" remarks="Идентификатор">
+            <constraints nullable="false" unique="true" primaryKey="true"/>
+        </column>
+        <column name="number" type="varchar(64)" remarks="Номер протокола">
+            <constraints nullable="false"/>
+        </column>
+        <column name="description" type="varchar" remarks="Описание протокола"/>
+        <column name="extension" type="varchar" remarks="Расширение фала">
+            <constraints nullable="false"/>
+        </column>
+        <column name="original_file_name" type="varchar" remarks="Оригинальное имя файла">
+            <constraints nullable="false"/>
+        </column>
+        <column name="storage_file_name" type="varchar" remarks="Имя файла в хранилище">
+            <constraints nullable="false" unique="true"/>
+        </column>
+        <column name="signed_file_name" type="varchar" remarks="Имя подписанной копии файла в хранилище">
+            <constraints nullable="true" unique="true"/>
+        </column>
+        <column name="mi_model" type="varchar" defaultValue="СИ не указано"
+                remarks="Модель поверенного средства измерений"/>
+        <column name="mi_serial_number" type="varchar" defaultValue="Не указан"
+                remarks="Заводской номер средства измерений"/>
+        <column name="verification_date" type="date" remarks="Дата поверки"/>
+        <column name="journal_id" type="bigint" remarks="Идентификатор журнала поверки к которому относится протокол">
+            <constraints nullable="false" foreignKeyName="protocol_protocol_id_verification_journal_id"
+                         references="verification_journals(id)"/>
+        </column>
+        <column name="verification_employee_id" type="int8" remarks="Идентификатор пользователя">
+            <constraints nullable="false" foreignKeyName="protocol_protocol_id_system_user_id"
+                         references="system_users(id)"/>
+        </column>
+        <column name="update_date" type="timestamp" remarks="Дата последнего изменения"/>
+        <column name="uploading_date" type="timestamp" remarks="Дата и время загрузки протокола на сервер"/>
+        <column name="awaiting_signing" type="bool" defaultValue="true"
+                remarks="Протокол ожидает подписания поверителем">
+            <constraints nullable="false"/>
+        </column>
+        <column name="signed" type="bool" defaultValue="false" remarks="Протокол подписан">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    </changeSet>
+</databaseChangeLog>
