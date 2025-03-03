@@ -40,8 +40,6 @@ public class SecurityFilterChainIntegrationTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
     private JournalRepository journalRepository;
     @Autowired
     private ProtocolRepository protocolRepository;
