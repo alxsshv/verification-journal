@@ -15,7 +15,7 @@ spring:
     change-log: classpath:db.changelog/db.changelog-master.xml
   thymeleaf:
     cache: false
-    prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
   servlet:
     multipart:
       max-file-size: 32MB

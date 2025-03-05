@@ -20,8 +20,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -59,6 +62,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void create(@UserNotExist @Valid UserDto userDto) {
         final User user = mapper.map(userDto, User.class);
         final Set<Role> userRoles = getUserRoles(userDto);
+        if (userDto.getPassword() == null) {
+            throw new UserOperationException("Пароль пользователя не может быть пустым");
+        }
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setRoles(userRoles);
         userRepository.save(user);
