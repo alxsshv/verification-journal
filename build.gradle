@@ -8,9 +8,6 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-group = 'com.alxsshv'
-version = '1.0.0'
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -59,10 +56,6 @@ test {
     useJUnitPlatform()
     dependsOn(checkstyleMain, checkstyleTest)
     finalizedBy jacocoTestReport
-}
-
-application {
-    mainClass = "com.alxsshv.Application"
 }
 
 checkstyle {
