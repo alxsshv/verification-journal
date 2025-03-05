@@ -8,7 +8,6 @@ import com.alxsshv.security.dto.UserDto;
 import com.alxsshv.security.dto.UserNoPassDto;
 import com.alxsshv.security.initializer.RoleInitializer;
 import com.alxsshv.security.initializer.UserInitializer;
-import com.alxsshv.security.repository.RoleRepository;
 import com.alxsshv.security.repository.UserRepository;
 import com.alxsshv.security.service.interfaces.DefaultRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;

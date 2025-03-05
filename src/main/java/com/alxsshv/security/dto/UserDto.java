@@ -1,7 +1,6 @@
 package com.alxsshv.security.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +17,6 @@ public class UserDto {
     private long id;
     @Size(min = 3, message = "Имя пользователя должно содержать не менее 3 символов")
     private String username;
-    @NotNull(message = "Пароль не может быть пустым")
     @Size(min = 5, message = "Длина пароля должна быть не менее 5 символов")
     private String password;
     @NotEmpty(message = "Пожалуйста укажите фамилию пользователя")
