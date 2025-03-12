@@ -211,9 +211,10 @@
                     url: $scope.contentUrl + "/pages?page=" + $scope.pageNum + "&dir=" + $scope.sortDirection + "&size=" + $scope.pageSize + "&journal=" + idAttr + "&search=" + $scope.searchString,
                     method: "GET"
                 }).then(function (response) {
-                    $scope.contentlist = response.data.content;
-                    console.log($scope.contentlist);
-                    $scope.createPaginationParams(response.data.totalPages);
+                    let data = response.data;
+                    $scope.contentlist = data.content;
+                    console.log(data.totalPages);
+                    $scope.createPaginationParams(data.totalPages);
                 });
             }
 
@@ -250,15 +251,17 @@
                 }
             }
 
-            $scope.createPaginationParams = function (totalPages) {
+         $scope.createPaginationParams = function (totalPages) {
                 $scope.pageArray = [];
-                $scope.previousPage = 0;
+                $scope.previousPage = Number($scope.pageNum) - 1;
                 $scope.nextPage = Number($scope.pageNum) + 1;
-
-                if ($scope.pageNum > 0) {
-                    $scope.previousPage = $scope.pageNum - 1;
+                if (totalPages < 1) {
+                 totalPages = 1;
                 }
-                if ($scope.pageNum >= totalPages - 1) {
+                if ($scope.previousPage < 0) {
+                    $scope.previousPage = 0;
+                }
+                if ($scope.nextPage >= totalPages - 1) {
                     $scope.nextPage = totalPages - 1;
                 }
                 $scope.pageArray = [];
