@@ -11,6 +11,7 @@ import com.alxsshv.security.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -47,12 +49,18 @@ public class ProtocolControllerIntegrationTest {
     private ProtocolServiceFacade protocolServiceFacade;
     private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:14");
     private MockMvc mvc;
+    @TempDir
+    private static Path originDir;
+    @TempDir
+    private static Path signedDir;
 
     @DynamicPropertySource
     public static void configure(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
+        registry.add("paths.originProtocolsPath", () -> originDir.toString());
+        registry.add("paths.signedProtocolsPath", () -> signedDir.toString());
     }
 
     @BeforeAll
@@ -116,7 +124,7 @@ public class ProtocolControllerIntegrationTest {
         protocolFileInfo.setVerificationDate(LocalDate.now().toString());
         protocolFileInfo.setVerificationEmployeeId(userId);
         final MockHttpServletResponse response = mvc.perform(MockMvcRequestBuilders
-                .multipart(HttpMethod.POST, "/journals/protocols/form")
+                        .multipart(HttpMethod.POST, "/journals/protocols/form")
                         .file(file)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .param("protocolInfo", objectMapper.writeValueAsString(protocolFileInfo)))
