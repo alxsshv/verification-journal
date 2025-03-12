@@ -94,4 +94,9 @@ public class WebController {
         return "security/settings/system_admin";
     }
 
+    @GetMapping("/file_not_found")
+    public String getFileNotFoundView() {
+        return "fileNotFound";
+    }
+
 }
