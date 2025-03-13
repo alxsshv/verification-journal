@@ -19,8 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
-
 @Component
 @AllArgsConstructor
 public class PdfStamp {
@@ -45,7 +43,7 @@ public class PdfStamp {
 
     private void setStampToPage(PDDocument document, int pageIndex, User user) throws IOException {
         final PDPage page = document.getPage(pageIndex);
-        final PDFont pdfFont = PDType0Font.load(document,new FileInputStream(pathsConfig.getFontPath()),false);
+        final PDFont pdfFont = PDType0Font.load(document, new FileInputStream(pathsConfig.getFontPath()), false);
         final PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
         contentStream.beginText();
         contentStream.newLineAtOffset(15, 35);
