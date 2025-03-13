@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class PathsConfig {
     private String originProtocolsPath;
     private String signedProtocolsPath;
+    private String fontPath;
 }

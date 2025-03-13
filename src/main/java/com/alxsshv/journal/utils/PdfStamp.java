@@ -1,13 +1,13 @@
 package com.alxsshv.journal.utils;
 
+import com.alxsshv.config.PathsConfig;
 import com.alxsshv.security.model.User;
 import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +15,17 @@ import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
-import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER;
 
 @Component
 @AllArgsConstructor
 public class PdfStamp {
     @Autowired
     private StringTransliterator transliterator;
+    @Autowired
+    private PathsConfig pathsConfig;
 
     public PDDocument setStamp(PDDocument pdd, User user) throws IOException {
         final PDDocument stampedDocument = new PDDocument();
@@ -42,7 +43,7 @@ public class PdfStamp {
 
     private void setStampToPage(PDDocument document, int pageIndex, User user) throws IOException {
         final PDPage page = document.getPage(pageIndex);
-        final PDFont pdfFont = new PDType1Font(COURIER);
+        final PDFont pdfFont = PDType0Font.load(document, new FileInputStream(pathsConfig.getFontPath()), false);
         final PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
         contentStream.beginText();
         contentStream.newLineAtOffset(15, 35);
