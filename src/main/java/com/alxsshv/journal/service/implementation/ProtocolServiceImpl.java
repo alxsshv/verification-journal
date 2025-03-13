@@ -147,6 +147,7 @@ public class ProtocolServiceImpl implements ProtocolService {
     public void update(ProtocolDto protocolDto) {
         final Protocol protocol = getProtocolById(protocolDto.getId());
         final Protocol updateData = mapper.map(protocolDto, Protocol.class);
+        updateData.setVerificationDate(LocalDate.parse(protocolDto.getVerificationDate()));
         protocol.updateFrom(updateData);
         protocolRepository.save(protocol);
     }
