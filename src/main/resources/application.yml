@@ -1,5 +1,4 @@
-server:
-  port: 8085
+port: 8085
 
 spring:
   datasource:
@@ -24,6 +23,7 @@ spring:
 paths:
   originProtocolsPath: /home/alexei/dev/protocols/origin
   signedProtocolsPath: /home/alexei/dev/protocols/signed
+  fontPath: src/main/resources/fonts/GentiumBookPlus.ttf
 
 logging:
   file:
