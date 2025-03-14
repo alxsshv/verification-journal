@@ -1,0 +1,29 @@
+services:
+  verification-journal:
+    image: "alxsshv/verification-journal:latest"
+    container_name: verification-journal
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/journaldb
+      SPRING_DATASOURCE_USERNAME: jUser
+      SPRING_DATASOURCE_PASSWORD: jPassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+    ports:
+      - "8085:8085"
+
+  database:
+    image: "postgres:14"
+    container_name: "database"
+    environment:
+      POSTGRES_DB: "journaldb"
+      POSTGRES_USER: "jUser"
+      POSTGRES_PASSWORD: "jPassword"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -UjUser -djournaldb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
