@@ -1,6 +1,6 @@
 services:
   verification-journal:
-    image: "alxsshv/verification-journal:latest"
+    image: "alxsshv/verification-journal:v.1.0.0"
     container_name: verification-journal
     depends_on:
       database:
