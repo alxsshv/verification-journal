@@ -14,10 +14,102 @@
 - оповещать пользователей о необходимости подписания протоколов поверки.
 
 Проект разработан в учебных целях для изучения принципов backend-разработки с применениям языка Java и технологий Spring Boot, Spring MVC, Spring Security, 
-Gradle, Liquibase, JUnit, Thymeleafe, PostgreSQL, Bootstrap, Apache PDFBox. 
+Gradle, Liquibase, JUnit, Thymeleafe, PostgreSQL, Bootstrap, Apache PDFBox, Docker. 
 
-## Для запуска проекта Вам потребуется: ##
-- Java 21;
+## Варианты запуска ##
+
+### Запуск демонстрационной версии в Docker ###
+
+Демо-версия проекта - это полноценно работающая версия проекта. Отличие данного способа запуска от других вариантов заключается в том, что все данные и файлы будут храниться внутри Docker-контейнеров и при удалении контейнеров удалятся вместе с ними. Данный вариант запуска позволяет ознакомиться с проектом, посмотреть его возможности и функциональность. Его не стоит использовать, если вы решили использовать данный проект для хранения важных для Вас данных или файлов. 
+
+Для запуска демонстрационной версии проекта необходимо:
+- установить Docker на Ваш компьютер в соответствии с [данным руководством](https://docs.docker.com/get-started/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install/);
+- скачать файл docker-compose.demo.yaml из директории данного проекта;
+- доступ к сети интернет.
+
+Окрыть каталог с файлом docker-compose.demo.yaml терминале (командной строке) и выполнить команду:
+```
+docker-compose -f docker-compose.demo.yaml up
+```
+Для остановки контейнеров необходимо выполнить команду:
+```
+docker-compose -f docker-compose.demo.yaml stop
+```
+Для остановки и удаления контейнеров необходимо выполнить команду:
+```
+docker-compose -f docker-compose.demo.yaml down
+```
+
+### Запуск полноценно работающей версии в Docker ###
+Полноценно работающая версия проекта обладает тем же функционалом, что и демонстрационная версия. Отличие данного способа запуска от других вариантов заключается в возможности хранения данных и файлов на жестком диске компьютера (хоста) на котором развёрнуты Docker-контейнеры, что обеспечивает их сохранность в случае удаления контейнеров. Данный вариант запуска является простым способом развертывания приложения для использования по назначению. Он позволяет быстро развернуть рабочую версию приложения и обеспечивает сохранность данных в случае остановки и удаления Docker-контейнеров. 
+
+Для запуска данной версии проекта необходимо:
+- установить Docker на Ваш компьютер в соответствии с [данным руководством](https://docs.docker.com/get-started/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install/);
+- скачать файл docker-compose.production.yaml из директории данного проекта;
+- доступ к сети интернет.
+  
+Порядок запуска:
+- Создать на жёстком диске компьютера хоста каталоги для хранения оригиналов протоколов поверки, подписанных копий протоколов поверки, файлов логгирования работы сервиса, файлов базы данных, например, если  каталог с проектом имеет название journal_service, то подкаталоги могут иметь следующую структуру:
+- journal_service/protocols/origin (хранение оригиналов протоколов);
+- journal_service/protocols/signed (хранение подписанных копий протоколов);
+- journal_service/logs (хранение логов работы сервиса);
+- journal_service/pgdata (хранение файлов базы данных);
+В текстовом редакторе открыть файл docker-compose.production.yaml и внести в него следующие изменения;
+в разделе verification-journal в секции volumes:
+```
+    volumes:
+      - /home/alexei/dev/services/protocols/origin:/usr/src/app/protocols/origin
+      - /home/alexei/dev/services/protocols/signed:/usr/src/app/protocols/signed
+      - /home/alexei/dev/services/logs:/usr/src/app/logs
+```
+в каждой строчке указать путь к соответствующему каталогу, созданному на хосте (указывать слева от двоеточия, правые от двоеточия пути менять не нужно), например:
+
+```
+    volumes:
+      - /journal_service/protocols/origin:/usr/src/app/protocols/origin  
+      - /journal_service/protocols/signed:/usr/src/app/protocols/signed
+      - /journal_service/logs:/usr/src/app/logs
+```
+в разделе database в секции volumes указать путь к каталогу для хранения файлов базы данных в пункте source:
+Например, было:
+```
+    volumes:
+      - type: bind
+        source: "/home/alexei/dev/services/pgdata"
+        target: "/var/lib/postgresql/data/pgdata"
+```
+стало:
+```
+    volumes:
+      - type: bind
+        source: "/journal_service/pgdata"
+        target: "/var/lib/postgresql/data/pgdata"
+```
+
+Окрыть каталог с файлом docker-compose.production.yaml терминале (командной строке) и выполнить команду:
+```
+docker-compose -f docker-compose.production.yaml up
+```
+Для остановки контейнеров необходимо выполнить команду:
+```
+docker-compose -f docker-compose.production.yaml stop
+```
+Для остановки и удаления контейнеров необходимо выполнить команду:
+```
+docker-compose -f docker-compose.production.yaml down
+```
+
+### Запуск собственноручно-собранной версии в Docker ###
+Данный вариант запуска требует от пользователя знаний принципов программирования и технологий сборки проекта, в связи с чем подробное описание запуска проекта приводить нецессообразно. 
+Для запуска проекта необходимо:
+- внести изменения в код проекта;
+- упаковать проект в jar-файл;
+- выполнить сборку образа и запуск проекта в Docker-Compose используя файл docker-compose.yaml.  
+
+
+### Запуск без использования Docker ###
+Для запуска проекта Вам необходимо установить на компьютер (хост) 
+- Java 21 (минимум jre);
 - PostrgeSQL версия 14 или выше.
   
 В файле `application.yml` необходимо указать:
@@ -26,7 +118,7 @@ Gradle, Liquibase, JUnit, Thymeleafe, PostgreSQL, Bootstrap, Apache PDFBox.
 `originProtocolsPath: /home/user/protocols/origin`
 - каталог для хранения подписанных копий отчетов о поверке `signedProtocolsPath`, например (linux);
 `signedProtocolsPath: /home/alexei/dev/protocols/signed`
-В windows возможно потребуется экранировать обратный слеш, т.е. вместо ставить два обратных слеша вместо одного.
+В windows возможно потребуется экранировать обратный слеш, т.е. ставить два обратных слеша вместо одного.
 
 В PostgreSQL необходимо создать базу даннных, например journaldb, и указать параметры подключения к ней в файле application.yml в секции `spring: datasource:`    
 
@@ -35,6 +127,8 @@ Gradle, Liquibase, JUnit, Thymeleafe, PostgreSQL, Bootstrap, Apache PDFBox.
           username: alexei //имя пользователя базы данных   
           password: test //пароль пользователя базы данных
           ```
+Упаковать проект в jar-файл.
+Запустить проект командой `java -jar application.jar`, где application.jar - имя jar-файла (архива) проекта. 
 После запуска приложения для доступа к сервису перейдите в браузере по ссылке <http://localhost:8085/> введите логин Root и пароль Rooot.
 Для просмотра полных возможностей сервиса необходимо:
  * пользователю Root добавить права поверителя (администрирование -> список пользователей -> выбрать Root -> редактирование -> выбрать уровень доступа "Поверитель"
