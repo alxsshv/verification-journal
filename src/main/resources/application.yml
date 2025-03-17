@@ -1,7 +1,8 @@
-server:
-  port: 8085
-
+---
 spring:
+  config:
+    activate:
+      on-profile: "default"
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/journaldb
@@ -29,3 +30,42 @@ paths:
 logging:
   file:
     name: logs/application.log
+
+server:
+  port: 8085
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/journaldb
+    username: jUser
+    password: jPassword
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db.changelog/db.changelog-master.xml
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+  servlet:
+    multipart:
+      max-file-size: 32MB
+      max-request-size: 32MB
+
+paths:
+  originProtocolsPath: /usr/src/app/protocols/origin
+  signedProtocolsPath: /usr/src/app/protocols/signed
+  font-path: /usr/src/app/GentiumBookPlus.ttf
+
+logging:
+  file:
+    name: /usr/src/app/logs/verification_journal.log
+
+server:
+  port: 8085
