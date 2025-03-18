@@ -136,6 +136,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void update(@Valid UserDto userDto) {
         final User user = getUserById(userDto.getId());
         final User updatingUserData = mapper.map(userDto, User.class);
+        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
+            updatingUserData.setPassword(user.getPassword());
+        } else {
+            updatingUserData.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
         user.updateFrom(updatingUserData);
         userRepository.save(user);
     }

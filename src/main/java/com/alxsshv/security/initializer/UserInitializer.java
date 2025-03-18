@@ -38,7 +38,7 @@ public class UserInitializer {
             userDto.setPatronymic("Root");
             userDto.setUsername("Root");
             userDto.setRoles(Set.of(mapper.map(defaultRoleService.getRootRole(), RoleDto.class)));
-            userDto.setPassword("Rooot");
+            userDto.setPassword("Root");
             userDto.setChecked(true);
             userDto.setEnabled(true);
             userService.create(userDto);
