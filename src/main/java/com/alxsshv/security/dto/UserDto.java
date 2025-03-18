@@ -17,7 +17,7 @@ public class UserDto {
     private long id;
     @Size(min = 3, message = "Имя пользователя должно содержать не менее 3 символов")
     private String username;
-    @Size(min = 5, message = "Длина пароля должна быть не менее 5 символов")
+    @Size(min = 4, message = "Длина пароля должна быть не менее 4 символов")
     private String password;
     @NotEmpty(message = "Пожалуйста укажите фамилию пользователя")
     private String surname;
